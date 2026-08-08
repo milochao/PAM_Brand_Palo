@@ -93,6 +93,7 @@
   .tick-ink{stroke:var(--ink); stroke-width:1.2; opacity:.55;}
   .lab{
     font-family:var(--sans); font-weight:500; font-size:12px; letter-spacing:.05em; fill:var(--light);
+    paint-order:stroke; stroke:#FFFFFF; stroke-width:4px; stroke-linejoin:round;
   }
   .lab-strong{fill:var(--ink); font-weight:600;}
   .lab-title{fill:var(--mid); font-weight:600; letter-spacing:.14em;}
@@ -343,7 +344,8 @@
       <div class="sw" style="background:#FFFFFF; border-color:#D8D6D2;"><span>paper</span></div>
       <div class="sw" style="background:#3DAE49"><span>3DAE49</span></div>
     </div>
-    <p>Charcoal and paper carry the record. Green is the only color, and it means one thing: life, flow, and what is still growing. It appears twice, in the sap line that tracks your position up the trunk and stops at any cut, and in the new growth at the crown. Nothing else on the page is green.</p>
+    <p>Charcoal and paper carry the record. Green is the only color, and it means one thing: life, flow, and what is still growing. It appears twice, in the sap line that tracks your position up the trunk and stops at any cut, and in the new growth at the crown. Nothing else on the page is green, which is why the bird is drawn in ink.</p>
+    <p>The bird is notional, drawn after a chestnut-backed chickadee, a small resident of redwood canopy on the Peninsula. It lands on whichever living limb is nearest you, so it climbs as you climb. It will not perch above a cut. Make one low on the trunk and it comes down to the wood that is still carrying water.</p>
     <p>Ring count, the moribund declaration, the soot, the wells, the 1955 borings and the fog line follow the Sixteen Conversations surface note. The brand language is verbatim from the August 2026 one-pager, with one adaptation: <b>"Everything below the lens follows from the lens"</b> became <b>"Everything above it rises through it,"</b> because this drawing reads upward instead of downward. Fact and drawing are labeled apart; where the drawing invents, it says so here.</p>
   </div>
 </section>
@@ -410,6 +412,7 @@
   function sapFrac(y){ return clamp((ROOT_TIP - y)/(ROOT_TIP - TIP_Y), 0, 1); }
 
   var zones = { z1:null, z2:null, z3:null, z4:null };
+  var perches = [];   // where the bird can land: live limbs only
 
   (function buildTree(){
     // ---- ink wobble: the trunk, bark, limbs and roots are traced through a light
@@ -418,7 +421,37 @@
     var wdefs = el('defs',{},svg);
     var wobble = el('filter',{id:'inkwobble', x:'-4%', y:'-2%', width:'108%', height:'104%'},wdefs);
     el('feTurbulence',{type:'fractalNoise', baseFrequency:'0.010 0.016', numOctaves:'2', seed:'7', result:'n'},wobble);
-    el('feDisplacementMap',{'in':'SourceGraphic','in2':'n', scale:'4.6', xChannelSelector:'R', yChannelSelector:'G'},wobble);
+    el('feDisplacementMap',{'in':'SourceGraphic','in2':'n', scale:'2.0', xChannelSelector:'R', yChannelSelector:'G'},wobble);
+
+    // ---- hand marks ----
+    // A stroke breaks by starting a new subpath mid-line, so one path element can
+    // carry many broken segments. Element count stays flat while the line stops
+    // and restarts the way a drawn line does.
+    function inkD(pts, gapChance){
+      var d = '', pen = false;
+      for (var i=0;i<pts.length;i++){
+        var p = pts[i];
+        if (!pen){ d += 'M'+p[0].toFixed(1)+' '+p[1].toFixed(1); pen = true; }
+        else { d += ' L'+p[0].toFixed(1)+' '+p[1].toFixed(1); }
+        if (pen && i>0 && i<pts.length-2 && R2() < gapChance){ pen = false; }
+      }
+      return d;
+    }
+    function wob(pts, amt){
+      var o = [];
+      for (var i=0;i<pts.length;i++){
+        o.push([pts[i][0] + (R2()-.5)*amt, pts[i][1] + (R2()-.5)*amt]);
+      }
+      return o;
+    }
+    function qsample(x0,y0,cx,cy,x1,y1,n){
+      var pts=[];
+      for (var i=0;i<=n;i++){
+        var f=i/n, u=1-f;
+        pts.push([u*u*x0 + 2*u*f*cx + f*f*x1, u*u*y0 + 2*u*f*cy + f*f*y1]);
+      }
+      return pts;
+    }
 
     // ---- soil and ground ----
     var soil = el('g',{},svg);
@@ -449,23 +482,31 @@
       { dx: 215, label:'How change happens',  lx: 168 }
     ];
     rootDefs.forEach(function(rd, i){
-      var x0 = CX + rd.dx, y0 = GROUND + 210 + i*44;
-      el('path',{d:'M'+x0+' '+y0+' Q '+(CX+rd.dx*.5)+' '+(GROUND+130)+' '+(CX+rd.dx*.12)+' '+(GROUND+8),
-        'stroke-width':3.2, opacity:.85},roots);
-      el('path',{d:'M'+(x0-14)+' '+(y0-8)+' Q '+(CX+rd.dx*.55)+' '+(GROUND+112)+' '+(CX+rd.dx*.16)+' '+(GROUND+6),
-        'stroke-width':1.2, opacity:.4},roots);
+      var x0 = CX + rd.dx, y0 = GROUND + 152 + i*34;
+      var main = qsample(x0,y0, CX+rd.dx*(.42+R2()*.2), GROUND+120+R2()*30, CX+rd.dx*.12, GROUND+8, 16);
+      el('path',{d:inkD(wob(main,2.4), .09), 'stroke-width':(2.3+R2()*1.5).toFixed(2),
+        opacity:.85, 'stroke-linecap':'round'},roots);
+      el('path',{d:inkD(wob(main,5.5), .34), 'stroke-width':(.7+R2()*.6).toFixed(2), opacity:.4},roots);
+      // rootlets off the named lead, at odd angles, some crossing their neighbours
+      for (var k=0;k<3+Math.floor(R2()*4);k++){
+        var bi = 3+Math.floor(R2()*10);
+        var bx = main[bi][0], by = main[bi][1];
+        var sp = qsample(bx,by, bx+(R2()-.5)*130, by+26+R2()*54, bx+(R2()-.5)*220, by+46+R2()*100, 8);
+        el('path',{d:inkD(wob(sp,2.2), .28), 'stroke-width':(.45+R2()*.8).toFixed(2), opacity:(.2+R2()*.28).toFixed(2)},roots);
+      }
       el('circle',{cx:x0, cy:y0, r:2.6, fill:'#1A1A1A', stroke:'none', opacity:.8},roots);
-      el('text',{x:CX+rd.lx, y:y0+22, class:'lab lab-title'},roots).textContent = rd.label.toUpperCase();
+      el('text',{x:CX+rd.lx, y:y0+20, class:'lab lab-title'},roots).textContent = rd.label.toUpperCase();
     });
-    // minor rootlets
-    for (var r3=0;r3<9;r3++){
-      var rx0 = CX + (R2()-.5)*430, ry0 = GROUND + 90 + R2()*260;
-      el('path',{d:'M'+rx0+' '+ry0+' Q '+(CX+(rx0-CX)*.4)+' '+(GROUND+60)+' '+(CX+(rx0-CX)*.1)+' '+(GROUND+4),
-        'stroke-width':1, opacity:.3},roots);
+    // minor rootlets, uneven and unequal
+    for (var r3=0;r3<14;r3++){
+      var rx0 = CX + (R2()-.5)*470, ry0 = GROUND + 70 + R2()*300;
+      var rp = qsample(rx0,ry0, CX+(rx0-CX)*(.3+R2()*.3), GROUND+40+R2()*50, CX+(rx0-CX)*.1, GROUND+4, 10);
+      el('path',{d:inkD(wob(rp,2.6), .3), 'stroke-width':(.4+R2()*.8).toFixed(2), opacity:(.14+R2()*.24).toFixed(2)},roots);
     }
-    // taproot
-    el('path',{d:'M'+CX+' '+(GROUND+2)+' L '+(CX-6)+' '+ROOT_TIP+' L '+(CX+8)+' '+(ROOT_TIP-40),
-      'stroke-width':2, opacity:.5},roots);
+    // taproot, drawn in two broken passes
+    var tapPts = qsample(CX, GROUND+2, CX-10, GROUND+220, CX-4, ROOT_TIP, 12);
+    el('path',{d:inkD(wob(tapPts,2.4), .16), 'stroke-width':2, opacity:.55, 'stroke-linecap':'round'},roots);
+    el('path',{d:inkD(wob(tapPts,6), .4), 'stroke-width':.8, opacity:.3},roots);
 
     // ---- trunk outline ----
     var STEPS = 120, pL='', pR='';
@@ -476,12 +517,20 @@
       pR = 'L'+(cx+hw).toFixed(1)+' '+y.toFixed(1)+(s? ' ':'')+pR;
     }
     el('path',{d:pL+' '+pR+' Z', fill:'#FFFFFF', stroke:'none'},svg); // paper fill so soil lines stop at bark
-    el('path',{d:pL, class:'trunk-line', fill:'none', stroke:'#1A1A1A','stroke-width':1.7},svg);
-    var pRstart = pR.replace(/^L/,'M');
-    el('path',{d:pRstart, class:'trunk-line', fill:'none', stroke:'#1A1A1A','stroke-width':1.7},svg);
-    // second lighter pass, offset, for pencil-pressure variation
-    el('path',{d:pL, class:'trunk-line', fill:'none', stroke:'#1A1A1A','stroke-width':.7, opacity:.4},svg);
-    el('path',{d:pRstart, class:'trunk-line', fill:'none', stroke:'#1A1A1A','stroke-width':.7, opacity:.4},svg);
+    // the contour is drawn several times over, each pass broken in different places
+    // and wobbled by a different amount. the two sides are never mirror images.
+    var ptsL = [], ptsR = [];
+    for (var s2=0;s2<=STEPS;s2++){
+      var f2 = s2/STEPS, y2 = lerp(GROUND, TIP_Y, f2);
+      ptsL.push([centerX(y2)-halfW(y2), y2]);
+      ptsR.push([centerX(y2)+halfW(y2), y2]);
+    }
+    [[1.7,.09,.92],[1.0,.24,.5],[.6,.38,.3]].forEach(function(pass){
+      el('path',{d:inkD(wob(ptsL, pass[0]*1.7), pass[1]), class:'trunk-line', fill:'none',
+        stroke:'#1A1A1A','stroke-width':pass[0], opacity:pass[2], 'stroke-linecap':'round'},svg);
+      el('path',{d:inkD(wob(ptsR, pass[0]*1.9), pass[1]+ .04), class:'trunk-line', fill:'none',
+        stroke:'#1A1A1A','stroke-width':pass[0]*.94, opacity:pass[2]*.95, 'stroke-linecap':'round'},svg);
+    });
 
     // buttress curves at base
     var butt = el('g',{stroke:'#1A1A1A', fill:'none', opacity:.65},svg);
@@ -535,22 +584,29 @@
       el('ellipse',{cx:kx, cy:ky, rx:kr, ry:kr*1.7, 'stroke-width':.9, opacity:.3, fill:'none'},kbark);
       el('ellipse',{cx:kx, cy:ky, rx:kr*.45, ry:kr*.8, 'stroke-width':.7, opacity:.25, fill:'none'},kbark);
     }
-    // ---- bark furrows ----
-    for (var b=0;b<1300;b++){
-      var fy = R2();
-      var y0 = lerp(GROUND-6, TIP_Y+60, fy);
-      var len = 40 + R2()*190 * (1-fy*.5);
-      var y1 = Math.max(TIP_Y+40, y0-len);
-      var edge = (R2()<.62) ? (R2()<.5?-1:1)*(0.55+R2()*.42) : (R2()-.5)*1.1;
-      var seg = 'M', n = 6;
-      for (var q=0;q<=n;q++){
-        var yq = lerp(y0,y1,q/n);
-        var xq = centerX(yq) + edge*halfW(yq) + (R2()-.5)*5;
-        seg += (q?' L':'')+xq.toFixed(1)+' '+yq.toFixed(1);
+    // ---- bark furrows: clustered, not scattered. some bands left bare. ----
+    for (var c=0; c<86; c++){
+      if (R2() < .15) continue;                       // a band the pencil never got to
+      var cf = R2();
+      var cy0 = lerp(GROUND-6, TIP_Y+80, cf);
+      var cEdge = (R2()-.5)*1.9;                      // the cluster sits somewhere across the width
+      var nStrokes = 4 + Math.floor(R2()*16);         // clusters vary a lot in weight
+      for (var i=0;i<nStrokes;i++){
+        var y0 = cy0 + (R2()-.5)*280;
+        var len = 26 + R2()*240 * (1-cf*.55);
+        var y1 = Math.max(TIP_Y+40, y0-len);
+        var edge = clamp(cEdge + (R2()-.5)*.55, -1.03, 1.03);
+        var m = 5 + Math.floor(R2()*5);
+        var pts = [];
+        for (var q=0;q<=m;q++){
+          var yq = lerp(y0,y1,q/m);
+          pts.push([centerX(yq) + edge*halfW(yq) + (R2()-.5)*6, yq]);
+        }
+        var g = zoneFor((y0+y1)/2);
+        var bark = g.querySelector('.bark') || el('g',{class:'bark', stroke:'#1A1A1A', fill:'none'},g);
+        el('path',{d:inkD(pts, .18+R2()*.28), 'stroke-width':(.4+R2()*.9).toFixed(2),
+          opacity:(.06+R2()*.28).toFixed(2), 'stroke-linecap':'round'},bark);
       }
-      var g = zoneFor((y0+y1)/2);
-      var bark = g.querySelector('.bark') || el('g',{class:'bark', stroke:'#1A1A1A', fill:'none'},g);
-      el('path',{d:seg, 'stroke-width':.8, opacity:(.1+R2()*.22).toFixed(2)},bark);
     }
 
     // heartwood ghost in zone 2
@@ -570,53 +626,110 @@
       el('text',{x:centerX(midY)+halfW(midY)+26, y:midY, class:'lab'},hg).textContent = 'heartwood \u00B7 stopped carrying water long ago \u00B7 still holds the tree up';
     })();
 
-    // ---- limbs and needle tufts ----
-    function tuft(g, x, y, ang, big){
-      var n = big ? 20 : 14;
+    // ---- limbs: every one drawn on its own terms ----
+    // three foliage habits, chosen per lump, so no two masses repeat
+    function spray(g, x, y, ang, size, style){
+      // a sprig, not a starburst: a short rachis with needles set along its length
+      var n = style===0 ? (18+Math.floor(R2()*14))
+            : style===1 ? (11+Math.floor(R2()*10))
+                        : (4+Math.floor(R2()*5));
+      var rlen = size*(1.3+R2()*1.1);
+      var droop = rlen*(.14+R2()*.24);
+      var rx = x + Math.cos(ang)*rlen;
+      var ry = y + Math.sin(ang)*rlen + droop;
+      var rachis = qsample(x,y, (x+rx)/2, (y+ry)/2 + droop*.5, rx, ry, 7);
+      el('path',{d:inkD(wob(rachis,.9), .12), 'stroke-width':(.5+R2()*.5).toFixed(2),
+        opacity:(.3+R2()*.35).toFixed(2), 'stroke-linecap':'round'},g);
       for (var i=0;i<n;i++){
-        var a = ang + (R2()-.5)*0.95;
-        var L = (big?9:7) + R2()*(big?12:9);
-        el('line',{x1:x, y1:y, x2:x+Math.cos(a)*L, y2:y+Math.sin(a)*L + L*.34,
-          'stroke-width':1, opacity:(.34+R2()*.42).toFixed(2)},g);
+        var f = .1 + R2()*.92;                      // needles sit along the rachis
+        var bi = Math.min(7, Math.round(f*7));
+        var px = rachis[bi][0] + (R2()-.5)*1.6;
+        var py = rachis[bi][1] + (R2()-.5)*1.6;
+        var sd = (R2()<.5) ? -1 : 1;
+        var a = ang + sd*(.55+R2()*.7) + (R2()-.5)*.25;
+        var L = size*(.3+R2()*.55)*(1-f*.35);       // shorter toward the tip
+        var x2 = px+Math.cos(a)*L, y2 = py+Math.sin(a)*L + L*(.14+R2()*.24);
+        el('path',{d:'M'+px.toFixed(1)+' '+py.toFixed(1)+' L '+x2.toFixed(1)+' '+y2.toFixed(1),
+          'stroke-width':(.45+R2()*.5).toFixed(2), opacity:(.2+R2()*.48).toFixed(2),
+          'stroke-linecap':'round'},g);
       }
     }
-    function limb(y, side, len, droopy){
+    function limb(y, side, len, droopy, dead){
       var g = zoneFor(y);
       var lw = g.querySelector('.limbwork') || el('g',{class:'limbwork', stroke:'#1A1A1A', fill:'none'},g);
       var x0 = centerX(y) + side*(halfW(y)-2);
-      var midx = x0 + side*len*.5, midy = y + (droopy?len*.34:len*.16);
-      var tipx = x0 + side*len,   tipy = y + (droopy?len*.06:-len*.16);
-      el('path',{d:'M'+x0+' '+y+' Q '+midx+' '+midy+' '+tipx+' '+tipy, 'stroke-width':2.1, opacity:.85},lw);
-      // secondary twig
-      el('path',{d:'M'+lerp(x0,tipx,.42)+' '+lerp(y,tipy,.42)+' q '+(side*len*.18)+' '+(len*.2)+' '+(side*len*.34)+' '+(len*.14), 'stroke-width':1.2, opacity:.6},lw);
-      // sprays along outer 70%: two offset rows for mass
-      var steps = Math.max(4, Math.round(len/34));
-      for (var i=0;i<=steps;i++){
-        var f = .3 + .7*i/steps;
-        var qx = (1-f)*(1-f)*x0 + 2*(1-f)*f*midx + f*f*tipx;
-        var qy = (1-f)*(1-f)*y  + 2*(1-f)*f*midy + f*f*tipy;
-        tuft(lw, qx, qy - 3, side>0? -0.6 : Math.PI+0.6, f>.6);
-        if (f > .45) tuft(lw, qx - side*8, qy + 9, side>0? 0.5 : Math.PI-0.5, false);
+      // each limb gets its own sag, reach and rise, so the curve is never reused
+      var sag  = droopy ? (.22+R2()*.28) : (.05+R2()*.17);
+      var rise = droopy ? (R2()*.15)     : (-.26+R2()*.22);
+      var reach = len*(.84+R2()*.32);
+      var midx = x0 + side*reach*(.36+R2()*.22), midy = y + len*sag;
+      var tipx = x0 + side*reach,                tipy = y + len*rise;
+      var spine = qsample(x0,y,midx,midy,tipx,tipy,14);
+      var tw = dead ? (1.0+R2()*.7) : (1.4+R2()*1.4);
+      el('path',{d:inkD(wob(spine,1.7), dead?.26:.09), 'stroke-width':tw.toFixed(2),
+        opacity:(dead ? .4+R2()*.2 : .68+R2()*.28).toFixed(2), 'stroke-linecap':'round'},lw);
+      // a partial second pass, as if the line was gone back over
+      if (R2()<.7){
+        el('path',{d:inkD(wob(spine.slice(0, 4+Math.floor(R2()*9)),2.6), .32),
+          'stroke-width':(tw*.5).toFixed(2), opacity:(.2+R2()*.25).toFixed(2)},lw);
       }
-      return {x0:x0, y0:y, cx:midx, cy:midy, x:tipx, y:tipy};
+      // forks, varying in number and placement
+      var forks = dead ? (R2()<.5?1:0) : 1+Math.floor(R2()*3);
+      for (var k=0;k<forks;k++){
+        var bi = 3+Math.floor(R2()*9);
+        var bx = spine[bi][0], by = spine[bi][1];
+        var flen = reach*(.13+R2()*.32), fdrop = len*(.05+R2()*.28);
+        var fp = qsample(bx,by, bx+side*flen*.5, by+fdrop*.85, bx+side*flen, by+fdrop, 8);
+        el('path',{d:inkD(wob(fp,1.5), .17), 'stroke-width':(tw*.55).toFixed(2), opacity:(.4+R2()*.28).toFixed(2)},lw);
+        if (!dead && R2()<.85) spray(lw, fp[8][0], fp[8][1], side>0?-.5:Math.PI+.5, 8+R2()*11, R2()<.5?0:1);
+      }
+      if (!dead){
+        // mass placed in irregular lumps, not stepped evenly along the branch
+        var lumps = 6 + Math.floor(R2()*7);
+        for (var i2=0;i2<lumps;i2++){
+          var f = .32 + R2()*.68;
+          var idx = Math.min(14, Math.round(f*14));
+          var px = spine[idx][0] + (R2()-.5)*11, py = spine[idx][1] + (R2()-.5)*11;
+          spray(lw, px, py-2, side>0? -0.6 : Math.PI+0.6, 9+R2()*13, R2()<.55?0:1);
+          if (R2()<.7) spray(lw, px - side*(4+R2()*12), py + 5+R2()*10, side>0? .45 : Math.PI-.45, 7+R2()*10, R2()<.4?0:1);
+        }
+        if (R2()<.8) spray(lw, tipx, tipy, side>0? -0.4 : Math.PI+0.4, 7+R2()*10, R2()<.55?1:2);
+      }
+      return {x0:x0, y0:y, cx:midx, cy:midy, x:tipx, y:tipy, pts:spine};
     }
-    var limbs = [
-      [6180,-1,285,true],[6000,1,235,false],[5790,-1,320,true],[5580,1,275,false],
-      [5340,-1,365,true],[5140,1,255,false],[4900,-1,405,true],[4680,1,315,false],
-      [4460,-1,280,false],[4240,1,350,true],
-      [4020,-1,325,false],[3810,1,285,false],[3600,-1,340,true],[3400,1,300,false],
-      [3200,-1,285,false],[3010,1,265,false],[2830,-1,300,true],[2650,1,245,false],
-      [2480,-1,255,false],[2320,1,225,false],[2160,-1,235,false],[2010,1,205,false],
-      [1860,-1,215,true],[1720,1,185,false],[1580,-1,190,false],[1450,1,165,false],
-      [1320,-1,170,false],[1200,1,145,false],[1080,-1,150,false],[970,1,125,false],
-      [865,-1,128,false],[765,1,105,false],[670,-1,105,false],[580,1,86,false],
-      [495,-1,84,false],[415,1,66,false],[340,-1,62,false],[272,1,48,false],[210,-1,42,false]
-    ];
+
+    // placement: uneven gaps, sides that do not strictly alternate,
+    // and dead lower limbs, which is what the photograph actually shows.
+    var limbs = [], ly = 6260, lastSide = 1;
+    while (ly > 190){
+      var hf = (GROUND - ly)/(GROUND - TIP_Y);
+      var sd = (R2() < .74) ? -lastSide : lastSide;
+      lastSide = sd;
+      var rch = lerp(390, 42, Math.pow(hf,1.25)) * (.7+R2()*.52);
+      limbs.push([ly, sd, rch, R2() < (hf<.55 ? .6 : .28), (hf < .3) && (R2() < .3)]);
+      ly -= 74 + R2()*118 - hf*24;
+    }
+    // one limb on the right at mid height carries the four promise words
+    limbs.push([4700, 1, 330, false, false]);
+    limbs.sort(function(a,b){ return b[0]-a[0]; });
+
     var promiseLimb = null;
     limbs.forEach(function(L3){
-      var bz = limb(L3[0], L3[1], L3[2], L3[3]);
-      if (L3[0] === 4680) promiseLimb = bz;
+      var bz = limb(L3[0], L3[1], L3[2], L3[3], L3[4]);
+      if (L3[0] === 4700) promiseLimb = bz;
+      // a live limb offers a landing, out along its length rather than at the trunk
+      if (!L3[4]){
+        var pi = 4 + Math.floor(R2()*4);
+        perches.push({ x: bz.pts[pi][0], y: bz.pts[pi][1] - 11 });
+      }
     });
+    // the bare lower trunk is most of this tree's height. a small bird works a
+    // redwood trunk as readily as a branch, and without these the lower stretch
+    // would offer nowhere to land once a cut is made.
+    for (var ty2 = GROUND-130; ty2 > 6320; ty2 -= 210 + R2()*130){
+      var sd2 = (R2()<.5) ? -1 : 1;
+      perches.push({ x: centerX(ty2) + sd2*(halfW(ty2) + 10), y: ty2 });
+    }
 
     // crown fill: micro-limbs above 900 so the topped crown reads dense
     for (var mc=0; mc<11; mc++){
@@ -769,7 +882,7 @@
   var plateConf = document.getElementById('plate-conf');
   var cueEl = approach.querySelector('.cue');
 
-  var vh, vw, scaleW, effH, climbTravel, worldTX = 0;
+  var vh, vw, scaleW, effH, climbTravel, worldTX = 0, curTY = 0, birdScale = 1;
   function layout(){
     vh = window.innerHeight; vw = window.innerWidth;
     approach.style.height = Math.round(vh*2.7)+'px';
@@ -778,6 +891,8 @@
     world.style.height = H+'px';
     worldTX = Math.max(0, (vw - W*scaleW)/2);
     effH = H*scaleW;
+    // the bird holds roughly its own size on screen as the drawing scales down
+    birdScale = clamp(1.3/scaleW, 1.3, 2.7);
     climbTravel = Math.max(effH - vh, vh);
     climb.style.height = Math.round(climbTravel*1.55 + vh)+'px';
     var tsvg = document.getElementById('tree-svg');
@@ -812,6 +927,7 @@
     // scene 2: the climb, roots first, rising to the crown
     var p2 = progressOf(climb);
     var ty = -(effH - vh) * (1 - p2);
+    curTY = ty;
     world.style.transform = 'translate3d('+worldTX.toFixed(1)+'px,'+ty.toFixed(1)+'px,0) scale('+scaleW+')';
 
     // sap: your height, capped at the first cut
@@ -833,6 +949,93 @@
   window.addEventListener('scroll', onScroll, {passive:true});
   window.addEventListener('resize', function(){ layout(); }, {passive:true});
   layout();
+
+  /* ================================================= */
+  /* the bird                                          */
+  /* It lands on whatever living limb is nearest the   */
+  /* reader, so it climbs as you climb. Cut the trunk  */
+  /* and it will not perch above the cut.              */
+  /* ================================================= */
+  (function birdLife(){
+    if (!perches.length) return;
+    perches.sort(function(a,b){ return b.y - a.y; });   // lowest first
+
+    var g = el('g',{id:'bird'},svg);
+    var INK = '#1A1A1A';
+    el('path',{d:'M-6 -.4 L-13.4 -3.4 L-11.6 1.8 Z', fill:INK, opacity:.9},g);            // tail
+    el('path',{d:'M-6.6 -2.4 Q -1.4 -5.2 3 -3.4 Q 6.4 -2.1 6.2 .5 Q 3.1 3.4 -1.7 3.2 Q -5.7 2.8 -6.6 -2.4 Z',
+      fill:INK},g);                                                                        // body and head in one
+    el('path',{d:'M6.1 -1.5 L10.8 -.7 L6.1 .7 Z', fill:INK},g);                            // bill
+    el('circle',{cx:4.1, cy:-2, r:.62, fill:'#FFFFFF'},g);                                 // eye
+    var foldedWing = el('path',{d:'M-3.6 -1.5 Q -.2 -2.7 3.2 -.9 Q -.2 1.5 -3.6 -1.5 Z',
+      fill:INK, opacity:.5},g);
+    var wingG = el('g',{},g);
+    el('path',{d:'M-1 -1 Q 3.2 -6.4 7.4 -8.6 Q 4.2 -3.2 1.7 -.4 Z', fill:INK, opacity:.92},wingG);
+
+    var cur = { x:perches[0].x, y:perches[0].y }, curPerch = perches[0];
+    var from = null, to = null, flying = false, tf = 0, dur = 0, face = 1, flap = 0, lastTs = 0;
+
+    function livingPerches(){
+      var first = firstCutIndex();
+      if (first < 0) return perches;
+      var cy = CUTS[first].y, out = [];
+      for (var i=0;i<perches.length;i++){ if (perches[i].y > cy) out.push(perches[i]); }
+      return out.length ? out : [perches[0]];   // perches[0] is the lowest, always below every cut
+    }
+    function targetPerch(){
+      var list = livingPerches();
+      var wy = (vh*0.42 - curTY)/scaleW;      // a little above centre, so it leads the reader
+      var best = list[0], bd = Infinity;
+      for (var i=0;i<list.length;i++){
+        var d = Math.abs(list[i].y - wy);
+        if (d < bd){ bd = d; best = list[i]; }
+      }
+      return best;
+    }
+
+    function frame(ts){
+      if (!lastTs) lastTs = ts;
+      var dt = Math.min(64, ts - lastTs); lastTs = ts;
+      var r = climb.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh){ requestAnimationFrame(frame); return; }
+
+      var tp = targetPerch();
+      if (!flying && tp !== curPerch){
+        from = { x:cur.x, y:cur.y };
+        to = tp;
+        var dx = to.x - from.x, dy = to.y - from.y;
+        var dist = Math.sqrt(dx*dx + dy*dy);
+        dur = 340 + Math.min(950, dist*1.05);
+        tf = 0; flying = true;
+        face = (dx >= 0) ? 1 : -1;
+      }
+      if (flying){
+        tf += dt;
+        var f = Math.min(1, tf/dur);
+        var e = f<.5 ? 2*f*f : 1-Math.pow(-2*f+2,2)/2;
+        var ddx = to.x-from.x, ddy = to.y-from.y;
+        var bow = -Math.min(160, Math.sqrt(ddx*ddx+ddy*ddy)*0.3);
+        cur.x = lerp(from.x, to.x, e);
+        cur.y = lerp(from.y, to.y, e) + Math.sin(Math.PI*e)*bow + Math.sin(e*Math.PI*4)*5;
+        flap = Math.sin(tf/46);
+        if (f >= 1){ flying = false; curPerch = to; cur.x = to.x; cur.y = to.y; }
+      }
+
+      var bob = flying ? 0 : Math.sin(ts/900)*0.5;
+      g.setAttribute('transform','translate('+cur.x.toFixed(1)+' '+(cur.y+bob).toFixed(1)+
+        ') scale('+(face*birdScale).toFixed(3)+' '+birdScale.toFixed(3)+')');
+      if (flying){
+        wingG.setAttribute('display','');
+        foldedWing.setAttribute('display','none');
+        wingG.setAttribute('transform','rotate('+(-16 + flap*46).toFixed(1)+' -1 -1)');
+      } else {
+        wingG.setAttribute('display','none');
+        foldedWing.setAttribute('display','');
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
 })();
 </script>
 </body>
