@@ -90,34 +90,39 @@
   }
   #tree-svg{display:block;}
 
-  .tick-ink{stroke:var(--ink); stroke-width:1.2; opacity:.55;}
+  .tick-ink{stroke:var(--ink); stroke-width:1.2; opacity:.55; vector-effect:non-scaling-stroke;}
   .lab{
-    font-family:var(--sans); font-weight:500; font-size:12px; letter-spacing:.05em; fill:var(--light);
-    paint-order:stroke; stroke:#FFFFFF; stroke-width:4px; stroke-linejoin:round;
+    font-family:var(--sans); font-weight:500; letter-spacing:.05em; fill:var(--light);
+    font-size:var(--labFS, 12px);
+    paint-order:stroke; stroke:#FFFFFF; stroke-width:var(--labSW, 4px); stroke-linejoin:round;
   }
   .lab-strong{fill:var(--ink); font-weight:600;}
   .lab-title{fill:var(--mid); font-weight:600; letter-spacing:.14em;}
+  @media (max-width:700px){ .lab-title{letter-spacing:.08em;} }
 
   .zone .bark{transition:opacity .7s var(--ease); filter:url(#inkwobble);}
   .zone .limbwork{transition:opacity .7s var(--ease); filter:url(#inkwobble);}
   .zone.dying .bark{opacity:.24;}
   .zone.dying .limbwork{opacity:.18;}
   .zone.dying .zone-label{opacity:.3;}
-  .trunk-line{filter:url(#inkwobble);}
+  .trunk-line{filter:url(#inkwobble); vector-effect:non-scaling-stroke;}
   #roots{filter:url(#inkwobble);}
-  #sap{fill:none; stroke:var(--green); stroke-width:2.4; stroke-linecap:round;}
+  #sap{fill:none; stroke:var(--green); stroke-width:2.4; stroke-linecap:round; vector-effect:non-scaling-stroke;}
   #tip-green path{stroke:var(--green);}
   .dying-note{opacity:0; transition:opacity .5s var(--ease);}
   .dying-note.on{opacity:1;}
 
   .cut{cursor:pointer;}
+  .cut:focus{outline:none;}
+  .cut:focus-visible .cut-ring{stroke-width:3.2;}
+  .cut text{font-size:12px; stroke-width:4px;}   /* the group is counter-scaled already */
   .cut .cut-hit{fill:transparent;}
-  .cut .cut-ring{fill:var(--paper); stroke:var(--ink); stroke-width:1.4; transition:all .3s var(--ease);}
-  .cut .cut-bar{stroke:var(--ink); stroke-width:1.6;}
+  .cut .cut-ring{fill:var(--paper); stroke:var(--ink); stroke-width:1.4; transition:all .3s var(--ease); vector-effect:non-scaling-stroke;}
+  .cut .cut-bar{stroke:var(--ink); stroke-width:1.6; vector-effect:non-scaling-stroke;}
   .cut:hover .cut-ring{stroke-width:2.2;}
   .cut.on .cut-ring{fill:var(--ink);}
   .cut.on .cut-bar{stroke:var(--paper);}
-  .cut-scar{stroke:var(--ink); stroke-width:2; stroke-dasharray:5 4; opacity:0; transition:opacity .4s var(--ease);}
+  .cut-scar{stroke:var(--ink); stroke-width:2; stroke-dasharray:5 4; opacity:0; transition:opacity .4s var(--ease); vector-effect:non-scaling-stroke;}
   .cut.on ~ .scars .cut-scar{opacity:0;}
   .cut-scar.on{opacity:.85;}
 
@@ -144,6 +149,11 @@
   .beat .roman{
     font-family:var(--serif); font-size:clamp(16px,1.5vw,19px); line-height:1.6; color:var(--ink); margin:0;
   }
+  .beat .teach{
+    margin-top:16px; font-family:var(--serif); font-size:clamp(15px,1.35vw,17px);
+    line-height:1.62; color:var(--mid);
+  }
+  .beat .teach b{color:var(--ink); font-weight:600;}
   .beat .quiet{
     margin-top:16px; font-family:var(--sans); font-size:12px; line-height:1.7; color:var(--mid);
   }
@@ -235,7 +245,7 @@
     <div id="plate-bleach"></div>
     <div id="title-block">
       <div class="kick u"><b>Palo Alto Museum</b> · The brand on one page</div>
-      <h1>The argument is shaped<br><em>like the tree.</em></h1>
+      <h1>The brand architecture is shaped<br><em>like the tree.</em></h1>
       <p class="sub">The town is named for it. Read the brand the way the tree works: from the ground up. Water enters at the lens and rises to how we act.</p>
     </div>
     <div id="plate-caption">After an early photograph · El Palo Alto at the rail crossing</div>
@@ -252,7 +262,8 @@
     <!-- beats -->
     <div class="beat centered low" data-p0="0.004" data-p1="0.075" data-zone="0">
       <p class="big">El Palo Alto. Roughly 1,085 rings.</p>
-      <p class="quiet">The handles on the trunk cut a ring around it. Cut anywhere. <b>Everything above the cut dies.</b> That is the whole argument.</p>
+      <p class="teach">A tree carries water up through a thin layer just under the bark. Cut a ring all the way around the trunk and that layer is broken. <b>Everything above the ring loses its water and dies. Everything below it lives on.</b></p>
+      <p class="teach">The brand is stacked on this tree in four parts, from the roots to the top. Each part rests on the one below it. Cut a ring at any handle and see which parts stop making sense.</p>
     </div>
 
     <div class="beat" data-p0="0.085" data-p1="0.225" data-zone="1">
@@ -326,8 +337,8 @@
 <!-- ================= REDUCED-MOTION STATIC PATH ================= -->
 <article id="static-path">
   <div class="u" style="color:var(--ink); margin-bottom:14px;">Palo Alto Museum · The brand on one page</div>
-  <h1>The argument is shaped like the tree.</h1>
-  <p style="font-style:italic; color:var(--mid);">Read from the ground up. Cut it anywhere and everything above the cut dies.</p>
+  <h1>The brand architecture is shaped like the tree.</h1>
+  <p style="font-style:italic; color:var(--mid);">Read from the ground up. Each part rests on the one below it, the way the top of a tree rests on the trunk that carries water to it.</p>
   <div class="row"><div class="eyebrow u">01 · What we see</div><p>People. Change. How change happens. The lens is in the ground. Everything above it rises through it.</p></div>
   <div class="row"><div class="eyebrow u">02 · What we believe</div><p>Nothing here was inevitable. The way things are is not the only way things can be. People can play a part in what happens next.</p></div>
   <div class="row"><div class="eyebrow u">03 · What PAM does for people</div><p>Reveal how change happens in Palo Alto. Bring people together to learn, make, meet, and play a part in what happens next. A person receives understanding, connection, possibility, enjoyment. More people, in more places, understanding how things came to be and how they can play a part in what comes next.</p></div>
@@ -345,8 +356,11 @@
       <div class="sw" style="background:#3DAE49"><span>3DAE49</span></div>
     </div>
     <p>Charcoal and paper carry the record. Green is the only color, and it means one thing: life, flow, and what is still growing. It appears twice, in the sap line that tracks your position up the trunk and stops at any cut, and in the new growth at the crown. Nothing else on the page is green, which is why the bird is drawn in ink.</p>
+    <p>The trunk carries a fire scar at the base, a burl, a waist where a limb tore out, and several healed wounds. These are invented. They are what a tree of this age carries, not a record of what this one carries, and they are here because a drawing of a particular tree shows particular damage. The reiterated trunks, the limbs that turn vertical and grow on as secondary trunks, are the one habit that marks an old coast redwood rather than a conifer in general.</p>
+    <p>Cutting a ring around the trunk states what the cut costs: the beliefs become only opinions, the mission only activity, the values only words. Those three lines are ours. They follow the one-pager's own line, that covering any row stops the rows depending on it from making sense, turned to run upward.</p>
+    <p>On a narrow screen the drawing is not the wide one shrunk. It carries fewer marks, so they stay apart instead of merging, shows a narrower slice of the world so the trunk is drawn bigger, and shortens the notes to what the width will hold. Type and handles hold their size on screen whatever the drawing does.</p>
     <p>The bird is notional, drawn after a chestnut-backed chickadee, a small resident of redwood canopy on the Peninsula. It lands on whichever living limb is nearest you, so it climbs as you climb. It will not perch above a cut. Make one low on the trunk and it comes down to the wood that is still carrying water.</p>
-    <p>Ring count, the moribund declaration, the soot, the wells, the 1955 borings and the fog line follow the Sixteen Conversations surface note. The brand language is verbatim from the August 2026 one-pager, with one adaptation: <b>"Everything below the lens follows from the lens"</b> became <b>"Everything above it rises through it,"</b> because this drawing reads upward instead of downward. Fact and drawing are labeled apart; where the drawing invents, it says so here.</p>
+    <p>Ring count, the declaration that it was dying, the soot, the wells, the 1955 borings and the fog line follow the Sixteen Conversations surface note. The brand language is verbatim from the August 2026 one-pager, with one adaptation: <b>"Everything below the lens follows from the lens"</b> became <b>"Everything above it rises through it,"</b> because this drawing reads upward instead of downward. Fact and drawing are labeled apart; where the drawing invents, it says so here.</p>
   </div>
 </section>
 
@@ -357,6 +371,9 @@
   'use strict';
   var NS = 'http://www.w3.org/2000/svg';
   var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // A phone gets its own drawing, not the desktop one shrunk. Fewer marks, so they
+  // stay apart instead of merging into grey, and shorter notes that fit the width.
+  var NARROW0 = window.innerWidth < 700;
   if (REDUCED) return;
 
   function mulberry32(seed){
@@ -391,16 +408,56 @@
 
   var R2 = mulberry32(20260926);
 
+  // The axis wanders. It is not a formula with a period in it, because a trunk
+  // that repeats every so many feet is the thing that reads as machine made.
+  function walk(n, step, damp, amp){
+    var w = [], v = 0, d = 0, i;
+    for (i=0;i<=n;i++){ d = d*damp + (R2()-.5)*step; v += d; w.push(v); }
+    var a0 = w[0], a1 = w[n];
+    for (i=0;i<=n;i++) w[i] -= a0 + (a1-a0)*(i/n);      // take the trend out
+    var s = w.slice();
+    for (i=1;i<n;i++) s[i] = (w[i-1] + 2*w[i] + w[i+1]) / 4;
+    var mx = 0; for (i=0;i<=n;i++) mx = Math.max(mx, Math.abs(s[i]));
+    if (mx > 0) for (i=0;i<=n;i++) s[i] = s[i]/mx*amp;
+    return s;
+  }
+  function readWalk(w, f){
+    var t = clamp(f,0,1)*(w.length-1), i = Math.floor(t), r = t-i;
+    return w[i] + (w[Math.min(i+1,w.length-1)] - w[i])*r;
+  }
+  var AXIS  = walk(170, 2.2, .80, 26);   // side to side wander of the centre line
+  var GIRTH = walk(150, 2.0, .74, 9);    // fine unevenness in the width
+
+  // Specific things that happened to this trunk: swellings over old roots, a burl,
+  // a waist where a big limb tore out. A drawing of one tree has one tree's damage.
+  var EVENTS = [
+    { y:8180, d: 30, s:190 },
+    { y:7180, d: 20, s:140 },
+    { y:6420, d:-14, s:120 },
+    { y:5880, d: 16, s:150 },
+    { y:4560, d:-11, s:120 },
+    { y:3560, d: 13, s:130 },
+    { y:2420, d: -8, s:110 }
+  ];
+  function events(y){
+    var t = 0;
+    for (var i=0;i<EVENTS.length;i++){
+      var e = EVENTS[i], u = (y - e.y)/e.s;
+      t += e.d * Math.exp(-u*u);
+    }
+    return t;
+  }
   function centerX(y){
     var f = (GROUND - y)/(GROUND - TIP_Y);
-    return CX + LEAN*Math.pow(Math.max(f,0),1.4) + Math.sin(f*7.3)*14 + Math.sin(f*2.1)*10;
+    return CX + LEAN*Math.pow(Math.max(f,0),1.4) + readWalk(AXIS, f);
   }
   function halfW(y){
     if (y > GROUND) return 0;
     var f = (GROUND - y)/(GROUND - TIP_Y);
     var base = lerp(120, 4, Math.pow(f, .62));
     if (y > GROUND-260) base += (y-(GROUND-260))/260 * 74;  // basal flare
-    return base;
+    base += events(y) * (1-f*.55) + readWalk(GIRTH, f) * (1-f*.6);
+    return Math.max(3, base);
   }
 
   // zone boundaries (world y) and their sap fractions
@@ -411,6 +468,13 @@
   ];
   function sapFrac(y){ return clamp((ROOT_TIP - y)/(ROOT_TIP - TIP_Y), 0, 1); }
 
+  // What each cut costs. These follow the one-pager's own line, that covering any row
+  // stops the rows that depend on it from making sense. The wording is ours, not the board's.
+  var CUTNOTES = [
+    { lg:['everything above is dying','the beliefs are only opinions'], sm:['dying above here','only opinions'] },
+    { lg:['everything above is dying','the mission is only activity'],  sm:['dying above here','only activity'] },
+    { lg:['everything above is dying','the values are only words'],     sm:['dying above here','only words'] }
+  ];
   var zones = { z1:null, z2:null, z3:null, z4:null };
   var perches = [];   // where the bird can land: live limbs only
 
@@ -444,6 +508,18 @@
       }
       return o;
     }
+    // line spacing in em keeps multi-line notes apart at any world scale
+    function labelLines(parent, x, y, anchor, lines, strongFirst){
+      var t = el('text',{x:x, y:y, class:'lab'},parent);
+      if (anchor) t.setAttribute('text-anchor', anchor);
+      lines.forEach(function(s,i){
+        var ts = el('tspan',{x:x},t);
+        if (i>0) ts.setAttribute('dy','1.35em');
+        if (i===0 && strongFirst) ts.setAttribute('class','lab-strong');
+        ts.textContent = s;
+      });
+      return t;
+    }
     function qsample(x0,y0,cx,cy,x1,y1,n){
       var pts=[];
       for (var i=0;i<=n;i++){
@@ -461,7 +537,8 @@
       el('line',{x1:60, x2:W-60, y1:sy, y2:sy, stroke:'#1A1A1A', 'stroke-width':.7, opacity:Math.max(.03, .2 - i*.007)},soil);
     }
     // buried marks in the deep strata: the record
-    [[300,9180,'rail spike'],[840,9300,'button'],[560,9420,'sherd']].forEach(function(bm){
+    (NARROW0 ? [[210,9180,'rail spike'],[540,9300,'button'],[360,9420,'sherd']]
+             : [[300,9180,'rail spike'],[840,9300,'button'],[560,9420,'sherd']]).forEach(function(bm){
       el('rect',{x:bm[0], y:bm[1], width:9, height:4, fill:'none', stroke:'#1A1A1A','stroke-width':.9, opacity:.4, transform:'rotate('+((R2()-.5)*40)+' '+bm[0]+' '+bm[1]+')'},soil);
       el('text',{x:bm[0]+18, y:bm[1]+5, class:'lab', opacity:.55},soil).textContent = bm[2];
     });
@@ -469,20 +546,27 @@
     el('line',{x1:0,x2:W,y1:GROUND,y2:GROUND,stroke:'#1A1A1A','stroke-width':1.4,opacity:.7},svg);
     // the creek, right of the tree
     var creek = el('g',{stroke:'#1A1A1A', fill:'none', opacity:.45},svg);
-    el('path',{d:'M980 '+(GROUND-2)+' q 40 26 20 66 q -18 38 12 78', 'stroke-width':1.2},creek);
-    el('path',{d:'M1012 '+(GROUND-2)+' q 34 30 16 64 q -14 34 14 74', 'stroke-width':1},creek);
-    el('text',{x:1040, y:GROUND+64, class:'lab'},creek).textContent = 'San Francisquito Creek';
-    el('text',{x:1040, y:GROUND+82, class:'lab'},creek).textContent = 'where Portol\u00E1\u2019s party camped';
+    var ckx = NARROW0 ? 690 : 980;
+    el('path',{d:'M'+ckx+' '+(GROUND-2)+' q 40 26 20 66 q -18 38 12 78', 'stroke-width':1.2},creek);
+    el('path',{d:'M'+(ckx+32)+' '+(GROUND-2)+' q 34 30 16 64 q -14 34 14 74', 'stroke-width':1},creek);
+    var ckLab = NARROW0
+      ? { x:840, anchor:'end', lines:['San Francisquito Creek'] }
+      : { x:1040, anchor:'start', lines:['San Francisquito Creek','where Portol\u00E1\u2019s party camped'] };
+    labelLines(creek, ckLab.x, GROUND+64, ckLab.anchor, ckLab.lines, false);
 
     // ---- roots: three named leads merging into the taproot ----
     var roots = el('g',{id:'roots', stroke:'#1A1A1A', fill:'none'},svg);
-    var rootDefs = [
+    var rootDefs = NARROW0 ? [
+      { dx:-250, label:'People',              lx:-150 },
+      { dx: -20, label:'Change',              lx: -40 },
+      { dx: 215, label:'How change happens',  lx:  34 }
+    ] : [
       { dx:-250, label:'People',              lx:-292 },
       { dx: -20, label:'Change',              lx: -40 },
       { dx: 215, label:'How change happens',  lx: 168 }
     ];
     rootDefs.forEach(function(rd, i){
-      var x0 = CX + rd.dx, y0 = GROUND + 152 + i*34;
+      var x0 = CX + rd.dx, y0 = GROUND + (NARROW0?112:152) + i*(NARROW0?27:34);
       var main = qsample(x0,y0, CX+rd.dx*(.42+R2()*.2), GROUND+120+R2()*30, CX+rd.dx*.12, GROUND+8, 16);
       el('path',{d:inkD(wob(main,2.4), .09), 'stroke-width':(2.3+R2()*1.5).toFixed(2),
         opacity:.85, 'stroke-linecap':'round'},roots);
@@ -525,12 +609,32 @@
       ptsL.push([centerX(y2)-halfW(y2), y2]);
       ptsR.push([centerX(y2)+halfW(y2), y2]);
     }
-    [[1.7,.09,.92],[1.0,.24,.5],[.6,.38,.3]].forEach(function(pass){
-      el('path',{d:inkD(wob(ptsL, pass[0]*1.7), pass[1]), class:'trunk-line', fill:'none',
-        stroke:'#1A1A1A','stroke-width':pass[0], opacity:pass[2], 'stroke-linecap':'round'},svg);
-      el('path',{d:inkD(wob(ptsR, pass[0]*1.9), pass[1]+ .04), class:'trunk-line', fill:'none',
-        stroke:'#1A1A1A','stroke-width':pass[0]*.94, opacity:pass[2]*.95, 'stroke-linecap':'round'},svg);
-    });
+    // The contour is laid down in short overlapping runs, each with its own pressure,
+    // and each overshooting its neighbour slightly the way a pen does at a join.
+    function contour(pts, weight){
+      var i = 0, n = pts.length;
+      while (i < n-2){
+        var runLen = 5 + Math.floor(R2()*11);
+        var a = Math.max(0, i - (R2()<.65 ? 1+Math.floor(R2()*3) : 0));   // overshoot back
+        var bEnd = Math.min(n, i + runLen + (R2()<.65 ? 1+Math.floor(R2()*3) : 0));
+        var run = pts.slice(a, bEnd);
+        if (run.length > 1){
+          var w = weight * (.55 + R2()*.95);
+          el('path',{d:inkD(wob(run, w*1.5), .07+R2()*.14), class:'trunk-line', fill:'none',
+            stroke:'#1A1A1A', 'stroke-width':w.toFixed(2),
+            opacity:(.4 + R2()*.55).toFixed(2), 'stroke-linecap':'round'},svg);
+          // sometimes the line is gone over a second time, lighter and offset
+          if (R2() < .45){
+            el('path',{d:inkD(wob(run, w*3.4), .3), class:'trunk-line', fill:'none',
+              stroke:'#1A1A1A', 'stroke-width':(w*.45).toFixed(2),
+              opacity:(.18+R2()*.24).toFixed(2), 'stroke-linecap':'round'},svg);
+          }
+        }
+        i += runLen - 1;
+      }
+    }
+    contour(ptsL, 1.5);
+    contour(ptsR, 1.35);   // the far side is drawn a little lighter than the near side
 
     // buttress curves at base
     var butt = el('g',{stroke:'#1A1A1A', fill:'none', opacity:.65},svg);
@@ -553,7 +657,7 @@
     }
 
     // ---- long continuous furrow lines, the deep redwood grain ----
-    for (var lf=0; lf<12; lf++){
+    for (var lf=0; lf<(NARROW0?7:12); lf++){
       var edgeF = -0.92 + lf*(1.84/11) + (R2()-.5)*.08;
       var seg2 = 'M', n2 = 46;
       for (var q3=0;q3<=n2;q3++){
@@ -575,7 +679,7 @@
       });
     }
     // knots and scars
-    for (var kn=0; kn<14; kn++){
+    for (var kn=0; kn<(NARROW0?7:14); kn++){
       var ky = lerp(GROUND-160, TIP_Y+400, R2());
       var kx = centerX(ky) + (R2()-.5)*1.2*halfW(ky)*.7;
       var kg = zoneFor(ky);
@@ -585,12 +689,12 @@
       el('ellipse',{cx:kx, cy:ky, rx:kr*.45, ry:kr*.8, 'stroke-width':.7, opacity:.25, fill:'none'},kbark);
     }
     // ---- bark furrows: clustered, not scattered. some bands left bare. ----
-    for (var c=0; c<86; c++){
+    for (var c=0; c<(NARROW0?58:86); c++){
       if (R2() < .15) continue;                       // a band the pencil never got to
       var cf = R2();
       var cy0 = lerp(GROUND-6, TIP_Y+80, cf);
       var cEdge = (R2()-.5)*1.9;                      // the cluster sits somewhere across the width
-      var nStrokes = 4 + Math.floor(R2()*16);         // clusters vary a lot in weight
+      var nStrokes = 3 + Math.floor(R2()*(NARROW0?8:16));   // clusters vary a lot in weight
       for (var i=0;i<nStrokes;i++){
         var y0 = cy0 + (R2()-.5)*280;
         var len = 26 + R2()*240 * (1-cf*.55);
@@ -609,6 +713,114 @@
       }
     }
 
+    function barkOf(y){
+      var g = zoneFor(y);
+      return g.querySelector('.bark') || el('g',{class:'bark', stroke:'#1A1A1A', fill:'none'},g);
+    }
+
+    // ---- tone. the light comes from the left, so the right of the trunk is hatched.
+    // hatching is the plainest evidence of a hand in a natural history plate, and the
+    // drawing had none of it: every previous mark ran the same way at the same weight.
+    for (var hb=0; hb<(NARROW0?40:88); hb++){
+      if (R2() < .17) continue;                       // a band the pencil skipped
+      var hy0 = lerp(GROUND-20, TIP_Y+140, R2());
+      var hn = 6 + Math.floor(R2()*(NARROW0?9:19));
+      var hSpan = 80 + R2()*280;
+      var cross = R2() < .22;                         // a few patches get a second angle
+      for (var hi=0; hi<hn; hi++){
+        var hy = hy0 + (R2()-.5)*hSpan;
+        if (hy > GROUND-8 || hy < TIP_Y+90) continue;
+        var hE = .24 + Math.pow(R2(), .5)*.74;   // denser as it nears the shaded edge
+        var hcx = centerX(hy), hhw = halfW(hy);
+        var hx = hcx + hE*hhw;
+        var hL = 9 + R2()*30;
+        var hA = 1.02 + (R2()-.5)*.3;
+        el('path',{d:'M'+hx.toFixed(1)+' '+hy.toFixed(1)+
+          ' l '+(-Math.cos(hA)*hL*.5).toFixed(1)+' '+(Math.sin(hA)*hL).toFixed(1),
+          'stroke-width':(.4+R2()*.55).toFixed(2), opacity:(.09+R2()*.23).toFixed(2)},barkOf(hy));
+        if (cross){
+          el('path',{d:'M'+hx.toFixed(1)+' '+hy.toFixed(1)+
+            ' l '+(-Math.cos(hA)*hL*.42).toFixed(1)+' '+(-Math.sin(hA)*hL*.55).toFixed(1),
+            'stroke-width':.42, opacity:(.07+R2()*.14).toFixed(2)},barkOf(hy));
+        }
+      }
+    }
+
+    // the shadow gathers along the shaded contour itself
+    for (var sh=0; sh<(NARROW0?110:240); sh++){
+      var shy = lerp(GROUND-30, TIP_Y+160, R2());
+      var shE = .72 + R2()*.3;
+      var shx = centerX(shy) + shE*halfW(shy);
+      var shL = 7 + R2()*22;
+      var shA = 1.05 + (R2()-.5)*.26;
+      el('path',{d:'M'+shx.toFixed(1)+' '+shy.toFixed(1)+
+        ' l '+(-Math.cos(shA)*shL*.45).toFixed(1)+' '+(Math.sin(shA)*shL).toFixed(1),
+        'stroke-width':(.45+R2()*.5).toFixed(2), opacity:(.12+R2()*.26).toFixed(2)},barkOf(shy));
+    }
+
+    // ---- checks across the grain, where the bark plates break
+    for (var ck=0; ck<(NARROW0?22:48); ck++){
+      var cky = lerp(GROUND-40, TIP_Y+220, R2());
+      var ckE = (R2()-.5)*1.6;
+      var ckx = centerX(cky) + ckE*halfW(cky);
+      var ckw = 4 + R2()*17;
+      el('path',{d:'M'+ckx.toFixed(1)+' '+cky.toFixed(1)+
+        ' l '+ckw.toFixed(1)+' '+((R2()-.5)*4).toFixed(1),
+        'stroke-width':(.4+R2()*.35).toFixed(2), opacity:(.08+R2()*.15).toFixed(2)},barkOf(cky));
+    }
+
+    // ---- the catface: a fire scar at the base. almost every ancient redwood carries one.
+    (function fireScar(){
+      var bk = barkOf(GROUND-300);
+      var yBot = GROUND-14, yTop = GROUND-660, i;
+      var L1=[], L2=[];
+      for (i=0;i<=18;i++){
+        var f = i/18, yy = lerp(yBot, yTop, f);
+        var cx4 = centerX(yy), hw4 = halfW(yy);
+        var open = Math.sin(Math.PI*Math.pow(f,.72));
+        L1.push([cx4 - hw4*0.58 - open*16, yy]);
+        L2.push([cx4 - hw4*0.58 + open*70, yy]);
+      }
+      el('path',{d:inkD(wob(L1,2.2), .09), 'stroke-width':1.8, opacity:.8},bk);
+      el('path',{d:inkD(wob(L2,2.2), .12), 'stroke-width':1.5, opacity:.7},bk);
+      for (var k=0;k<(NARROW0?150:330);k++){
+        var f2 = R2(), yy2 = lerp(yBot, yTop, f2);
+        var open2 = Math.sin(Math.PI*Math.pow(f2,.72));
+        if (open2 < .07) continue;
+        var cx5 = centerX(yy2), hw5 = halfW(yy2);
+        var xx = lerp(cx5 - hw5*0.58 - open2*16, cx5 - hw5*0.58 + open2*70, R2());
+        var kl = 5 + R2()*14;
+        el('path',{d:'M'+xx.toFixed(1)+' '+yy2.toFixed(1)+
+          ' l '+((R2()-.5)*4).toFixed(1)+' '+kl.toFixed(1),
+          'stroke-width':(.5+R2()*.8).toFixed(2), opacity:(.3+R2()*.45).toFixed(2)},bk);
+      }
+    })();
+
+    // ---- healed wounds where limbs tore out, with the grain running around them
+    for (var hs=0; hs<(NARROW0?3:6); hs++){
+      var wy = lerp(GROUND-780, TIP_Y+900, R2());
+      var wSide = R2()<.5 ? -1 : 1;
+      var wcx = centerX(wy) + wSide*halfW(wy)*(.18+R2()*.42);
+      var wbk = barkOf(wy);
+      var wrx = 6 + R2()*10, wry = wrx*(1.5+R2()*.9);
+      var ov = [];
+      for (var q=0;q<=18;q++){
+        var oa = q/18*Math.PI*2;
+        ov.push([wcx + Math.cos(oa)*wrx*(.82+R2()*.34), wy + Math.sin(oa)*wry*(.82+R2()*.34)]);
+      }
+      el('path',{d:inkD(ov,.17), 'stroke-width':(.7+R2()*.6).toFixed(2), opacity:.34},wbk);
+      for (var q2=0;q2<9;q2++){
+        var off = (q2-4)*(wrx*.6), sgn = off>=0 ? 1 : -1;
+        var gp = [];
+        for (var q3=0;q3<=10;q3++){
+          var yy3 = wy - wry*2.2 + (q3/10)*wry*4.4;
+          var bulge = Math.exp(-Math.pow((yy3-wy)/(wry*1.05),2)) * wrx*1.2 * sgn;
+          gp.push([wcx + off + bulge, yy3]);
+        }
+        el('path',{d:inkD(gp,.22), 'stroke-width':.5, opacity:(.1+R2()*.12).toFixed(2)},wbk);
+      }
+    }
+
     // heartwood ghost in zone 2
     (function heart(){
       var hg = el('g',{class:'bark', opacity:1},zones.z2);
@@ -622,17 +834,20 @@
       el('path',{d:d1, stroke:'#1A1A1A', 'stroke-width':1, fill:'none', opacity:.14},hg);
       el('path',{d:d2, stroke:'#1A1A1A', 'stroke-width':1, fill:'none', opacity:.14},hg);
       var midY = (yTop+yBot)/2;
-      el('line',{x1:centerX(midY)+halfW(midY)*.34, y1:midY-4, x2:centerX(midY)+halfW(midY)+20, y2:midY-4, stroke:'#8C8C8C','stroke-width':.8, 'stroke-dasharray':'2 3', opacity:.55},hg);
-      el('text',{x:centerX(midY)+halfW(midY)+26, y:midY, class:'lab'},hg).textContent = 'heartwood \u00B7 stopped carrying water long ago \u00B7 still holds the tree up';
+      el('line',{x1:centerX(midY)-halfW(midY)*.34, y1:midY-4, x2:centerX(midY)-halfW(midY)-20, y2:midY-4, stroke:'#8C8C8C','stroke-width':.8, 'stroke-dasharray':'2 3', opacity:.55},hg);
+      labelLines(hg, centerX(midY)-halfW(midY)-26, midY-8, 'end',
+        NARROW0 ? ['heartwood']
+                : ['heartwood', 'no longer carries water, still holds the tree up'], false);
     })();
 
     // ---- limbs: every one drawn on its own terms ----
     // three foliage habits, chosen per lump, so no two masses repeat
     function spray(g, x, y, ang, size, style){
       // a sprig, not a starburst: a short rachis with needles set along its length
-      var n = style===0 ? (18+Math.floor(R2()*14))
+      var dn = NARROW0 ? .55 : 1;
+      var n = Math.round((style===0 ? (18+Math.floor(R2()*14))
             : style===1 ? (11+Math.floor(R2()*10))
-                        : (4+Math.floor(R2()*5));
+                        : (4+Math.floor(R2()*5))) * dn);
       var rlen = size*(1.3+R2()*1.1);
       var droop = rlen*(.14+R2()*.24);
       var rx = x + Math.cos(ang)*rlen;
@@ -685,7 +900,7 @@
       }
       if (!dead){
         // mass placed in irregular lumps, not stepped evenly along the branch
-        var lumps = 6 + Math.floor(R2()*7);
+        var lumps = (NARROW0?4:6) + Math.floor(R2()*(NARROW0?4:7));
         for (var i2=0;i2<lumps;i2++){
           var f = .32 + R2()*.68;
           var idx = Math.min(14, Math.round(f*14));
@@ -707,7 +922,7 @@
       lastSide = sd;
       var rch = lerp(390, 42, Math.pow(hf,1.25)) * (.7+R2()*.52);
       limbs.push([ly, sd, rch, R2() < (hf<.55 ? .6 : .28), (hf < .3) && (R2() < .3)]);
-      ly -= 74 + R2()*118 - hf*24;
+      ly -= (NARROW0?122:74) + R2()*(NARROW0?150:118) - hf*24;
     }
     // one limb on the right at mid height carries the four promise words
     limbs.push([4700, 1, 330, false, false]);
@@ -731,8 +946,78 @@
       perches.push({ x: centerX(ty2) + sd2*(halfW(ty2) + 10), y: ty2 });
     }
 
+    // ---- reiteration. an old coast redwood sends limbs vertical and they become
+    // secondary trunks. it is the most recognisable habit of an ancient one, and a
+    // generic conifer drawing never has it.
+    function reiteration(y, side, out, rise){
+      var g = zoneFor(y);
+      var lw = g.querySelector('.limbwork') || el('g',{class:'limbwork', stroke:'#1A1A1A', fill:'none'},g);
+      var x0 = centerX(y) + side*(halfW(y)-2);
+      var kx = x0 + side*out, ky = y + out*.24;
+      var elbow = qsample(x0, y, x0+side*out*.62, y+out*.44, kx, ky, 10);
+      el('path',{d:inkD(wob(elbow,1.9), .09), 'stroke-width':(2.5+R2()*1.2).toFixed(2),
+        opacity:.85, 'stroke-linecap':'round'},lw);
+      var stem = [], sx = kx, i;
+      for (i=0;i<=18;i++){ sx += (R2()-.5)*3.6; stem.push([sx, ky - rise*(i/18)]); }
+      var sL = [], sR = [];
+      for (i=0;i<=18;i++){
+        sL.push([stem[i][0] - lerp(12,2.4,i/18), stem[i][1]]);
+        sR.push([stem[i][0] + lerp(12,2.4,i/18), stem[i][1]]);
+      }
+      el('path',{d:inkD(wob(sL,1.8), .12), 'stroke-width':1.4, opacity:.82, 'stroke-linecap':'round'},lw);
+      el('path',{d:inkD(wob(sR,1.8), .16), 'stroke-width':1.2, opacity:.7,  'stroke-linecap':'round'},lw);
+      // it is a trunk, so it carries bark of its own
+      for (var bb2=0; bb2<(NARROW0?18:40); bb2++){
+        var bf = R2(), bi2 = Math.min(18, Math.round(bf*18));
+        var bhw = lerp(12,2.4,bf) * (R2()*1.7-.85);
+        var by0 = stem[bi2][1], by1 = by0 - (24+R2()*90);
+        var bp = [];
+        for (var bq=0; bq<=5; bq++){
+          var bt = bq/5, byy = lerp(by0,by1,bt);
+          var bfr = clamp((ky-byy)/rise, 0, 1);
+          var bidx = Math.min(18, Math.round(bfr*18));
+          bp.push([stem[bidx][0] + bhw + (R2()-.5)*2.5, byy]);
+        }
+        el('path',{d:inkD(bp, .2), 'stroke-width':(.4+R2()*.5).toFixed(2),
+          opacity:(.1+R2()*.24).toFixed(2)},lw);
+      }
+      for (var s2=0; s2<(NARROW0?12:22); s2++){
+        var f2 = .1 + R2()*.9, idx = Math.min(18, Math.round(f2*18));
+        var sd3 = R2()<.5 ? -1 : 1;
+        spray(lw, stem[idx][0] + sd3*(7+R2()*9), stem[idx][1] + (R2()-.5)*14,
+              sd3>0 ? -0.6 : Math.PI+0.6, 7+R2()*10, R2()<.5?0:1);
+      }
+      // its own small crown at the top
+      for (var tc=0; tc<(NARROW0?4:8); tc++){
+        spray(lw, stem[18][0] + (R2()-.5)*22, stem[18][1] + (R2())*26,
+              (R2()<.5?-1:1)>0 ? -0.75 : Math.PI+0.75, 6+R2()*9, R2()<.6?0:1);
+      }
+    }
+    reiteration(3640, -1, 205, 880);
+    reiteration(2780,  1, 160, 690);
+
+    // ---- broken stubs. limbs that snapped and were never shed.
+    for (var sb=0; sb<(NARROW0?4:8); sb++){
+      var sby = lerp(GROUND-900, 1400, R2());
+      var sbSide = R2()<.5 ? -1 : 1;
+      var sbg = zoneFor(sby);
+      var sblw = sbg.querySelector('.limbwork') || el('g',{class:'limbwork', stroke:'#1A1A1A', fill:'none'},sbg);
+      var sbx = centerX(sby) + sbSide*(halfW(sby)-2);
+      var sbLen = 22 + R2()*58;
+      var sbTip = [sbx + sbSide*sbLen, sby + sbLen*(.1+R2()*.3)];
+      var sbSpine = qsample(sbx, sby, sbx+sbSide*sbLen*.55, sby+sbLen*.34, sbTip[0], sbTip[1], 7);
+      el('path',{d:inkD(wob(sbSpine,1.5), .12), 'stroke-width':(1.3+R2()*1).toFixed(2),
+        opacity:(.5+R2()*.3).toFixed(2), 'stroke-linecap':'round'},sblw);
+      // the splintered break at the end
+      for (var sp2=0; sp2<4; sp2++){
+        el('path',{d:'M'+sbTip[0].toFixed(1)+' '+sbTip[1].toFixed(1)+
+          ' l '+(sbSide*(2+R2()*7)).toFixed(1)+' '+((R2()-.5)*9).toFixed(1),
+          'stroke-width':.7, opacity:(.3+R2()*.3).toFixed(2)},sblw);
+      }
+    }
+
     // crown fill: micro-limbs above 900 so the topped crown reads dense
-    for (var mc=0; mc<11; mc++){
+    for (var mc=0; mc<(NARROW0?7:11); mc++){
       var my = 880 - mc*68;
       if (my < TIP_Y+70) break;
       var mside = (mc%2===0)? -1 : 1;
@@ -752,7 +1037,7 @@
     }
 
     // the four visitor-promise words ride the 5140 limb itself
-    (function promiseWords(){
+    if (!NARROW0) (function promiseWords(){
       var pv = el('g',{class:'limbwork'},zones.z3);
       var pWords = ['Understanding','Connection','Possibility','Enjoyment'];
       var fr = [.3,.54,.78,1.0];
@@ -775,15 +1060,17 @@
       var cx = centerX(y), hw = halfW(y);
       var x0 = cx + side*(hw+4), x1 = cx + side*(hw+ext);
       el('line',{x1:x0, y1:y, x2:x1, y2:y, class:'tick-ink'},g);
-      lines.forEach(function(txt,i){
-        var tE = el('text',{x:x1+side*14, y:y+4+i*17, class:'lab '+(i===0?'lab-strong':'')},g);
-        tE.setAttribute('text-anchor', side>0?'start':'end');
-        tE.textContent = txt;
-      });
+      labelLines(g, x1+side*14, y+4, side>0?'start':'end', lines, true);
     }
-    archTick(GROUND-120, 1, 64, ['1955 \u00B7 increment borings at breast height', 'age put at 1,015 by the borer']);
-    archTick(1150, 1, 255, ['late 1920s \u00B7 declared moribund', 'locomotive soot in the crown \u00B7 wells drew the water down']);
-    archTick(590, -1, 170, ['1955 \u00B7 a sprinkler head piped to the crown', 'a booster pump when the pressure fell short']);
+    if (NARROW0){
+      archTick(GROUND-120, 1, 34, ['1955 \u00B7 borings', 'age put at 1,015']);
+      archTick(1150, 1, 44, ['late 1920s', 'declared dying']);
+      archTick(590, -1, 40, ['1955 \u00B7 fog piped', 'to the crown']);
+    } else {
+      archTick(GROUND-120, 1, 64, ['1955 \u00B7 increment borings at breast height', 'age put at 1,015 by the borer']);
+      archTick(1150, 1, 255, ['late 1920s \u00B7 declared dying', 'locomotive soot in the crown \u00B7 wells drew the water down']);
+      archTick(590, -1, 170, ['1955 \u00B7 a sprinkler head piped to the crown', 'a booster pump when the pressure fell short']);
+    }
     // fog pipe: a thin utility line rising beside the trunk to the crown
     (function pipe(){
       var pp = 'M';
@@ -813,14 +1100,18 @@
       var cx = centerX(c.y), hw = halfW(c.y);
       var scar = el('path',{d:'M'+(cx-hw-8)+' '+c.y+' L '+(cx+hw+8)+' '+c.y, class:'cut-scar', id:'scar-'+i},scarG);
       var g = el('g',{class:'cut', id:'cut-'+i, role:'button', tabindex:'0', 'aria-label':'Cut a ring around the trunk here'},svg);
+      c.g = g; c.hx = (cx-hw-30); c.hy = c.y;   // layout counter-scales the handle about this point
       el('circle',{cx:cx-hw-30, cy:c.y, r:46, class:'cut-hit'},g);
       el('circle',{cx:cx-hw-30, cy:c.y, r:11, class:'cut-ring'},g);
       el('line',{x1:cx-hw-36, y1:c.y, x2:cx-hw-24, y2:c.y, class:'cut-bar'},g);
       el('line',{x1:cx-hw-30, y1:c.y-6, x2:cx-hw-30, y2:c.y+6, class:'cut-bar cut-vert'},g);
       var hint = el('text',{x:cx-hw-48, y:c.y+4, class:'lab', 'text-anchor':'end'},g);
       hint.textContent = 'cut';
-      var note = el('text',{x:cx+hw+18, y:c.y+4, class:'lab lab-strong dying-note', id:'note-'+i},svg);
-      note.textContent = 'cut \u00B7 everything above this line is dying';
+      // each cut says what specifically stops working, which is the point of the handle
+      var noteLines = NARROW0 ? CUTNOTES[i].sm : CUTNOTES[i].lg;
+      var note = labelLines(svg, cx+hw+18, c.y+2, 'start', noteLines, true);
+      note.setAttribute('class','lab dying-note');
+      note.setAttribute('id','note-'+i);
       g.addEventListener('click', function(){ toggleCut(i); });
       g.addEventListener('keydown', function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); toggleCut(i);} });
     });
@@ -886,10 +1177,22 @@
   function layout(){
     vh = window.innerHeight; vw = window.innerWidth;
     approach.style.height = Math.round(vh*2.7)+'px';
-    scaleW = Math.min(1, vw/1160);
+    // a phone shows a narrower slice of the world, so the tree is drawn bigger
+    var NARROW = vw < 700;
+    scaleW = Math.min(1, vw/(NARROW ? 880 : 1160));
     world.style.width = W+'px';
     world.style.height = H+'px';
-    worldTX = Math.max(0, (vw - W*scaleW)/2);
+    worldTX = NARROW ? (vw/2 - 440*scaleW) : Math.max(0, (vw - W*scaleW)/2);
+    // annotations and handles hold their size on screen whatever the drawing does
+    var svgEl = document.getElementById('tree-svg');
+    var baseFS = NARROW ? 10.5 : 12;
+    svgEl.style.setProperty('--labFS', (baseFS/scaleW).toFixed(2)+'px');
+    svgEl.style.setProperty('--labSW', (3.5/scaleW).toFixed(2)+'px');
+    var k = (1/scaleW);
+    CUTS.forEach(function(c){
+      if (!c.g) return;
+      c.g.setAttribute('transform','translate('+c.hx+' '+c.hy+') scale('+k.toFixed(3)+') translate('+(-c.hx)+' '+(-c.hy)+')');
+    });
     effH = H*scaleW;
     // the bird holds roughly its own size on screen as the drawing scales down
     birdScale = clamp(1.3/scaleW, 1.3, 2.7);
