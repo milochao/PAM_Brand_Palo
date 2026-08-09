@@ -102,9 +102,17 @@
 
   .zone .bark{transition:opacity .7s var(--ease); filter:url(#inkwobble);}
   .zone .limbwork{transition:opacity .7s var(--ease); filter:url(#inkwobble);}
-  .zone.dying .bark{opacity:.62;}
-  .zone.dying .limbwork{opacity:.4;}
-  .zone.dying .zone-label{opacity:.3;}
+  /* two stages, because girdling has two. starving is slow and partial: the layer
+     below the cut stops being fed. dying is the collapse that follows it. */
+  .zone .bark, .zone .limbwork{transition-duration:1.6s;}
+  .zone.starving .bark{opacity:.74;}
+  .zone.starving .limbwork{opacity:.52;}
+  .zone.starving .zone-label{opacity:.45;}
+  .zone.dying .bark{opacity:.5; transition-duration:.55s;}
+  .zone.dying .limbwork{opacity:.26; transition-duration:.55s;}
+  .zone.dying .zone-label{opacity:.24; transition-duration:.55s;}
+  #roots{transition:opacity 1.9s var(--ease);}
+  #roots.starving{opacity:.38;}
   .trunk-line{filter:url(#inkwobble); vector-effect:non-scaling-stroke;}
   #roots{filter:url(#inkwobble);}
   #sap{fill:none; stroke:var(--green); stroke-width:2.4; stroke-linecap:round; vector-effect:non-scaling-stroke;}
@@ -139,6 +147,7 @@
     opacity:1; transform:translateY(0); visibility:visible; pointer-events:auto;
     transition:opacity .6s var(--ease), transform .6s var(--ease), visibility 0s linear 0s;
   }
+  .beat.on.starve{opacity:.7;}
   .beat.on.dim{opacity:.5;}   /* never blur prose: it reads as a broken render, not as meaning */
   .beat .eyebrow{color:var(--ink); margin-bottom:6px;}
   .beat .eyebrow .n{color:var(--faint); margin-right:10px; font-weight:700;}
@@ -302,7 +311,7 @@
     <div id="title-block">
       <div class="kick u"><b>Palo Alto Museum</b> · The brand on one page</div>
       <h1>Still<br><em>Adding Rings</em></h1>
-      <p class="sub">Nothing here was inevitable. The way things are is not the only way things can be. People can have a part in what happens next.</p>
+      <p class="sub">Nothing here was inevitable. The way things are is not the only way things can be. People can play a part in what happens next.</p>
     </div>
     <div id="plate-caption">El Palo Alto, the tree the town is named for</div>
     <div id="plate-conf">Confidential · Board use only · August 2026</div>
@@ -315,15 +324,16 @@
   <div class="stage" id="climb-stage">
     <div id="world"><svg id="tree-svg" aria-hidden="true"></svg></div>
     <div id="cut-flag" hidden role="status">
-      <span id="cut-flag-text"><b id="cut-flag-head">You cut a ring around the trunk.</b><span id="cut-flag-sub">Nothing above it gets water.</span></span>
+      <span id="cut-flag-text"><b id="cut-flag-head">You cut a ring around the trunk.</b><span id="cut-flag-sub">Nothing looks wrong yet.</span></span>
       <button id="cut-flag-heal" type="button">Undo</button>
     </div>
 
     <!-- beats -->
     <div class="beat centered low" data-p0="0.004" data-p1="0.075" data-zone="0">
       <p class="big">El Palo Alto. Roughly 1,085 rings.</p>
-      <p class="teach">A tree carries water up through a thin layer just under the bark. Cut a ring all the way around the trunk and that layer is broken. <b>Everything above the ring loses its water and dies. Everything below it lives on.</b></p>
-      <p class="teach">The brand is stacked on this tree in four parts, from the roots to the top. Each part rests on the one below it. Cut a ring at any handle and see which parts stop making sense.</p>
+      <p class="teach">A tree runs two streams. Water climbs the wood inside, roots to crown. Just under the bark, a thinner layer carries what the leaves make back down to the roots.</p>
+      <p class="teach">Cut a ring around the trunk and only the second one breaks. <b>Water keeps climbing, the crown stays green, and nothing looks wrong.</b> Below the cut, the roots stop being fed. They starve, and when they finally fail the crown goes with them.</p>
+      <p class="teach">The brand is stacked on this tree in four parts, roots to crown. Cut a ring at any handle and watch what it costs, and when.</p>
     </div>
 
     <div class="beat" data-p0="0.085" data-p1="0.225" data-zone="1">
@@ -331,47 +341,49 @@
       <div class="frame">The pattern in the material</div>
       <p class="big">People. Change. How change happens.</p>
       <p class="quiet">Three roots, one stream. <b>The lens is in the ground. Everything above it rises through it.</b></p>
-      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">We first asked which category each story belonged to. Then we asked <b>what were people doing</b>, and the same answer kept coming back across different fields and different centuries. Briones bought a rancho in her own name in 1844. De Forest kept working on a glass tube until it amplified in 1912. Residents refused to let an empty building come down for twenty-six years. Then we tested the word <b>change</b>, and it failed. Swap Palo Alto for Detroit, Lowell, Birmingham or Shenzhen and the sentence still works, so it describes time passing rather than this town. So the lens is <b>how</b> change happened. That answer is different in every case, and that is what makes it worth a building.<span class="src">Positioning deck 04 to 07</span></div>
+      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">We stopped asking what category each story belonged to and started asking <b>what people were doing</b>, and the same answer kept coming back across different fields and different centuries. Briones bought a rancho in her own name in 1844. De Forest kept working on a glass tube on Emerson Street until it amplified in 1912. Residents kept a closed building on the city’s agenda for more than twenty years, without knowing how. Then we tested the word <b>change</b>, and it failed. Swap Palo Alto for Detroit, Lowell, Shenzhen, or any town with a hundred years in it, and the sentence still works, so it describes time passing rather than this town. So the lens is <b>how</b> change happened. That answer is different in every case, and that is what makes it worth a building.<span class="src">Positioning deck 04 to 07</span></div>
     </div>
 
     <div class="beat" data-p0="0.235" data-p1="0.375" data-zone="2">
       <div class="eyebrow u"><span class="n">02</span>What we believe</div>
       <div class="frame">What follows from what we see</div>
       <p class="big">Nothing here was inevitable. The way things are is not the only way things can be. People can play a part in what happens next.</p>
-      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">Four moments could have gone the other way. Mayfield could have agreed to go dry in 1894, and nobody would have founded Palo Alto next door. The profession's objection could have held in 1930, and there would be no clinic to inherit. The racial covenants could have held here as they held nearly everywhere else. The city could have pulled the empty building down in 1999, and the town's records would still be in boxes. <b>Nothing here was inevitable</b> came out of those cases, so it reports what the record shows. The line after it does not. It chooses what to make of the record, and it is marked as a belief.<span class="src">Positioning deck 12, 13 and 16</span></div>
+      <p class="quiet">On the wall, this is two words. <b>What if.</b></p>
+      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">Four moments could have gone the other way. Mayfield could have agreed to go dry in 1894, and there would be no Palo Alto to found next door. The profession's objection could have held in 1930, and there would be no clinic to inherit. The covenants could have held here as they held nearly everywhere else. The city could have chosen another use for the empty building it owned in 1999, and the town's records would still be in boxes somewhere else. <b>Nothing here was inevitable</b> came out of those cases, so it reports what the record shows. The line after it does not. It chooses what to make of the record, and it is marked as a belief. <b>What if</b> is the same belief in the form a visitor meets, and it does both jobs in two words: what if Briones had not won the separation that let her hold land in her own name, and what if this town decided something different next year. It asks about the past and hands over the future in the same breath.<span class="src">Positioning deck 12, 13 and 16 &middot; What if proposed in review, August 2026</span></div>
     </div>
 
     <div class="beat" data-p0="0.385" data-p1="0.475" data-zone="3">
       <div class="eyebrow u"><span class="n">03</span>What PAM does for people · Mission</div>
       <div class="frame">What the institution does · here the trunk divides</div>
       <p class="roman">Reveal how change happens in Palo Alto. Bring people together to learn, make, meet, and play a part in what happens next.</p>
-      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">Each clause comes from somewhere. <b>Reveal how change happens</b> is the lens in the words the position already uses. <b>In Palo Alto</b> because the evidence is local and the question is not. <b>Bring people together</b> because not one case in the collection was made by a person on their own. <b>Learn, make, meet</b> is what bringing people together makes possible. <b>Play a part in what happens next</b> is the human meaning, word for word.<span class="src">Positioning deck 27</span></div>
+      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">Each clause comes from somewhere. <b>Reveal how change happens</b> is the lens, in the words the position already uses. <b>In Palo Alto</b> because the evidence is local and the question is not: Briones, de Forest, Homer Avenue, Addison Avenue. <b>Bring people together</b> because not one case in the collection was made by a person on their own. <b>Learn, make, meet</b> is what bringing people together makes possible. <b>Play a part in what happens next</b> is the human meaning, in the deck’s own words.<span class="src">Positioning deck 27</span></div>
     </div>
 
     <div class="beat" data-p0="0.485" data-p1="0.555" data-zone="3">
       <div class="eyebrow u"><span class="n">03</span>Visitor promise</div>
       <div class="frame">What a person receives</div>
       <ul class="word-list"><li>Understanding</li><li>Connection</li><li>Possibility</li><li>Enjoyment</li></ul>
-      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">A promise with nothing behind it is advertising, so each one names what PAM does to keep it. <b>Understanding</b>: every case runs on the same seven questions, so the process sits on the wall next to the result. <b>Connection</b>: nobody in the collection appears alone, and the programming seats visitors beside each other rather than in rows. <b>Possibility</b>: what nearly happened sits next to what happened, in the same case and at the same size. <b>Enjoyment</b>: the exhibitions hold while the programming changes, so whoever came for one has a reason to come back for the other.<span class="src">Positioning deck 28</span></div>
+      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">Each promise has something behind it that PAM does. A promise with nothing behind it is advertising. <b>Understanding</b>: every case is built from the seven questions, so the process is on the wall next to the result. <b>Connection</b>: nobody in the collection appears alone, and the programming puts visitors beside each other rather than in rows. <b>Possibility</b>: what nearly happened is shown alongside what happened, in the same case, at the same size. <b>Enjoyment</b>: the exhibitions hold and the programming changes, so a visitor who came for one has a reason to return for the other.<span class="src">Positioning deck 28</span></div>
     </div>
 
     <div class="beat" data-p0="0.565" data-p1="0.635" data-zone="3">
       <div class="eyebrow u"><span class="n">03</span>Vision</div>
       <div class="frame">The change PAM works toward</div>
-      <p class="roman">More people, in more places, understanding how things came to be and how they can play a part in what comes next.</p>
-      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">The mission, at three distances. A person leaves understanding more than when they walked in, and sees that things could have gone otherwise and still can. In the town, people see and respect each other differently, and notice how much they rely on each other. Further out, Palo Alto's stories and questions reach other places, and what those places find comes back here.<span class="src">Positioning deck 29</span></div>
+      <p class="roman">More people, in more places, understanding how the world around them came to be, how people shape it together, and how they can take part in what comes next.</p>
+      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">Three distances. A person understands more than when they walked in, sees that things could have gone otherwise, and sees that they still can &mdash; what they do with that is theirs. In the town, people see and respect each other differently, feel they belong here, and notice how much they rely on each other. Beyond Palo Alto, this town's stories, people and questions reach other communities, and what those places find comes back here.<span class="src">Positioning deck 29</span></div>
     </div>
 
     <div class="beat" data-p0="0.645" data-p1="0.715" data-zone="4">
       <div class="eyebrow u"><span class="n">04</span>How PAM acts · Values</div>
-      <div class="frame">What we rule out</div>
+      <div class="frame">What each one costs</div>
       <ul class="word-list">
-        <li>No one is shown alone.</li>
+        <li>Nobody appears alone.</li>
         <li>Keep what is uncomfortable.</li>
-        <li>The record is never finished.</li>
-        <li>What happens in the room matters as much as what is on the wall.</li>
+        <li>The record stays open.</li>
+        <li>The room counts as much as the wall.</li>
+        <li>Visitors are collaborators, not an audience.</li>
       </ul>
-      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">A value that never rules anything out is a decoration, so each one names what it decides. <b>No one is shown alone</b> rules out the single-hero show: the name on the plaque arrives with the colleagues, the objectors and the conditions. <b>Keep what is uncomfortable</b> keeps the racial covenants in the museum. <b>The record is never finished</b> means saying what we do not know, correcting in public, and asking people what we missed. <b>What happens in the room matters as much as what is on the wall</b> puts programming on the same calendar as the exhibitions.<span class="src">Positioning deck 30</span></div>
+      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">A value that never rules anything out is a decoration, so each one names what it decides. <b>Nobody appears alone</b> rules out the single-hero show: the name on the plaque arrives with the colleagues, the objectors, and the conditions that made the work possible. <b>Keep what is uncomfortable</b> keeps the covenants in the museum, because difficulty is not a reason to leave a subject out. <b>The record stays open</b> means we say what we do not know, we correct in public, and we keep asking people what we have missed. <b>The room counts as much as the wall</b> means programming is planned as museum work, on the same calendar as the exhibitions. <b>Visitors are collaborators, not an audience</b> rules out the museum that only gives: over a thousand people wrote on the boards before the doors opened, and stories in the inaugural exhibitions were chosen or found because of what they wrote.<span class="src">Positioning deck 30 &middot; fifth value proposed in review, August 2026</span></div>
     </div>
 
     <div class="beat" data-p0="0.725" data-p1="0.795" data-zone="4">
@@ -390,7 +402,7 @@
         <span class="tag">Participation</span><span class="tag">Partnerships</span>
       </div>
       <p class="voice-line" style="margin-top:16px;">The work goes beyond the building.</p>
-      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">About half of what happens here will not involve an exhibition. Exhibitions give a reason to come. Programming gives a reason to come back. Both are the museum, and neither one activates the other. The institution is also larger than the building. The same seven questions work on a screen, in a classroom, or in somebody else's hall. Palo Alto was never made only by people in Palo Alto.<span class="src">Positioning deck 23, 24 and 26</span></div>
+      <button class="why" type="button" aria-expanded="false"><span class="why-label">Why this line</span></button><div class="why-panel">Exhibitions and programming are interwoven, not alternating, and they carry equal weight. Every exhibition is designed with programming attached, because that is what keeps it alive after opening night: the El Palo Alto wall arrives with a family talking about their own heritage and with people arguing about the limits of AI in the humanities. Exhibitions give a reason to come. Programming gives a reason to come back. A third layer travels &mdash; a children&rsquo;s book, a museum in a box, a curriculum online. The institution is also larger than the building. The same seven questions work on a screen, in a classroom, or in somebody else's hall. Palo Alto was never made only by people in Palo Alto.<span class="src">Positioning deck 23, 24 and 26</span></div>
     </div>
 
     <div class="beat centered" data-p0="0.945" data-p1="1.02" data-zone="5" style="top:30vh;">
@@ -408,11 +420,11 @@
 <article id="static-path">
   <div class="u" style="color:var(--ink); margin-bottom:14px;">Palo Alto Museum · The brand on one page</div>
   <h1>Still Adding Rings</h1>
-  <p style="font-style:italic; color:var(--mid);">Nothing here was inevitable. The way things are is not the only way things can be. People can have a part in what happens next.</p>
+  <p style="font-style:italic; color:var(--mid);">Nothing here was inevitable. The way things are is not the only way things can be. People can play a part in what happens next.</p>
   <div class="row"><div class="eyebrow u">01 · What we see</div><p>People. Change. How change happens. The lens is in the ground. Everything above it rises through it.</p></div>
-  <div class="row"><div class="eyebrow u">02 · What we believe</div><p>Nothing here was inevitable. The way things are is not the only way things can be. People can play a part in what happens next.</p></div>
-  <div class="row"><div class="eyebrow u">03 · What PAM does for people</div><p>Reveal how change happens in Palo Alto. Bring people together to learn, make, meet, and play a part in what happens next. A person receives understanding, connection, possibility, enjoyment. More people, in more places, understanding how things came to be and how they can play a part in what comes next.</p></div>
-  <div class="row"><div class="eyebrow u">04 · How PAM acts</div><p>No one is shown alone. Keep what is uncomfortable. The record is never finished. What happens in the room matters as much as what is on the wall. The voice: a lifelong local who has nothing left to prove. Describe, don't sell. Cool about us. Warm about them. Exhibitions, programming, participation, partnerships. The work goes beyond the building.</p></div>
+  <div class="row"><div class="eyebrow u">02 · What we believe</div><p>Nothing here was inevitable. The way things are is not the only way things can be. People can play a part in what happens next. On the wall, this is two words: what if.</p></div>
+  <div class="row"><div class="eyebrow u">03 · What PAM does for people</div><p>Reveal how change happens in Palo Alto. Bring people together to learn, make, meet, and play a part in what happens next. A person receives understanding, connection, possibility, enjoyment. More people, in more places, understanding how the world around them came to be, how people shape it together, and how they can take part in what comes next.</p></div>
+  <div class="row"><div class="eyebrow u">04 · How PAM acts</div><p>Nobody appears alone. Keep what is uncomfortable. The record stays open. The room counts as much as the wall. Visitors are collaborators, not an audience. The voice: a lifelong local who has nothing left to prove. Describe, don't sell. Cool about us. Warm about them. Exhibitions, programming, participation, partnerships, interwoven rather than alternating. The work goes beyond the building.</p></div>
 </article>
 
 <!-- ================= COLOPHON ================= -->
@@ -425,13 +437,15 @@
       <div class="sw" style="background:#FFFFFF; border-color:#D8D6D2;"><span>paper</span></div>
       <div class="sw" style="background:#3DAE49"><span>3DAE49</span></div>
     </div>
-    <p>Charcoal and paper carry the record. Green is the only color, and it means one thing: life, flow, and what is still growing. It appears twice, in the sap line that tracks your position up the trunk and stops at any cut, and in the new growth at the crown. Nothing else on the page is green, which is why the bird is drawn in ink.</p>
+    <p>Charcoal and paper carry the record. Green is the only color, and it means one thing: life, flow, and what is still growing. It appears twice, in the sap line that tracks your position up the trunk and in the new growth at the crown. The sap line runs straight past a fresh cut, because water does. It stops at the cut only after the roots have failed, which is this drawing's shorthand for the whole tree going. Nothing else on the page is green, which is why the bird is drawn in ink.</p>
     <p>The trunk carries a fire scar at the base, a burl, a waist where a limb tore out, and several healed wounds. These are invented. They are what a tree of this age carries, not a record of what this one carries, and they are here because a drawing of a particular tree shows particular damage. The reiterated trunks, the limbs that turn vertical and grow on as secondary trunks, are the one habit that marks an old coast redwood rather than a conifer in general.</p>
-    <p>Cutting a ring around the trunk states what the cut costs. Without what we see, what we believe is just an opinion. Without what we believe, the mission is a list of things to do. Without the mission, the values rule nothing out. Those three lines are ours. They follow the one-pager's own line, that covering any row stops the rows depending on it from making sense, turned to run upward.</p>
+    <p>Cutting a ring around the trunk breaks the layer that carries what the leaves make back down to the roots. It does not break the wood carrying water up, which is why nothing looks wrong at first, why the roots starve before anything else, and why the crown fails last rather than first. A tree this size takes between two and five years over it. The drawing takes seconds, and compresses the wait to about three, which is the one place here that time is not to scale.</p>
+    <p>What each cut costs is stated in two parts, because the tree costs it in two parts. Below the cut: nothing draws on the lens, or nothing acts on the belief, or nobody carries the mission out. Above it, later: without what we see, what we believe is just an opinion; without what we believe, the mission is a list of things to do; without the mission, the values rule nothing out. Those lines are ours. They follow the deck's own line, that covering any row stops the rows depending on it from making sense, turned to run upward.</p>
     <p>Each layer carries a <b>Why this line</b> note, taken from the positioning deck of August 2026 and cited to its pages, so a reader can see what the wording was tested against rather than taking it on trust. Voice is the one row without a note, because the deck does not derive it.</p>
     <p>On a narrow screen the drawing is not the wide one shrunk. It carries fewer marks, so they stay apart instead of merging, shows a narrower slice of the world so the trunk is drawn bigger, and shortens the notes to what the width will hold. Type and handles hold their size on screen whatever the drawing does.</p>
-    <p>The bird is notional, drawn after a chestnut-backed chickadee, a small resident of redwood canopy on the Peninsula. It lands on whichever living limb is nearest you, so it climbs as you climb. It will not perch above a cut. Make one low on the trunk and it comes down to the wood that is still carrying water.</p>
-    <p>Ring count, the declaration that it was dying, the soot, the wells, the 1955 borings and the fog line follow the Sixteen Conversations surface note, which is open at <a class="research" href="https://milochao.github.io/Cross_Section/" target="_blank" rel="noopener">milochao.github.io/Cross_Section</a>. The brand language is verbatim from the August 2026 one-pager, with one adaptation: <b>"Everything below the lens follows from the lens"</b> became <b>"Everything above it rises through it,"</b> because this drawing reads upward instead of downward. Fact and drawing are labeled apart; where the drawing invents, it says so here.</p>
+    <p>The bird is notional, drawn after a chestnut-backed chickadee, a small resident of redwood canopy on the Peninsula. It lands on whichever living limb is nearest you, so it climbs as you climb. A fresh cut does not move it, because the crown is still being watered and a bird has no reason to leave a living tree. It goes when the roots fail and the tree stops drinking.</p>
+    <p>Ring count, the declaration that it was dying, the soot, the wells, the 1955 borings and the fog line follow the Sixteen Conversations surface note, which is open at <a class="research" href="https://milochao.github.io/Cross_Section/" target="_blank" rel="noopener">milochao.github.io/Cross_Section</a>. The brand language is quoted from the positioning deck of August 2026 and cited to its pages, not paraphrased. Two adaptations. <b>"Everything below the lens follows from the lens"</b> became <b>"Everything above it rises through it,"</b> because this drawing reads upward instead of downward. And the deck says <b>have</b> a part on pages 17, 18 and 31, and <b>play</b> a part in the mission on pages 27 and 31, while page 27 calls the phrase inherited word for word. It cannot be both. Reviewed in August 2026, <b>play</b> was preferred, so this drawing uses it throughout and drops the word-for-word claim. The vision keeps its own verb, <b>take</b> part. Fact and drawing are labeled apart; where the drawing invents, it says so here.</p>
+    <p>Two lines here are newer than the deck and are marked on the page as proposals rather than approved language: the fifth value, that visitors are collaborators, and <b>What if</b> as the visitor-facing form of the belief. Both came out of the August 2026 review. The Roth Building is described as more than twenty years of residents keeping a closed building on the agenda without knowing how, which is what the record supports; the phrase twenty-six years of arguing about the building does not, and has been removed.</p>
   </div>
 </section>
 
@@ -539,19 +553,33 @@
   ];
   function sapFrac(y){ return clamp((ROOT_TIP - y)/(ROOT_TIP - TIP_Y), 0, 1); }
 
-  // What each cut costs. These follow the one-pager's own line, that covering any row
-  // stops the rows that depend on it from making sense. The wording is ours, not the board's.
+  // A cut costs two different things at two different times, because girdling does.
+  // BELOW: the layer under the cut stops being drawn on, and starves.
+  // ABOVE: the layers over it lose their ground, and go all at once, later.
+  // The wording is ours, not the board's.
   var CUTNOTES = [
-    { lg:['everything above is dying','without what we see, what we believe is just an opinion'],
-      sm:['dying above here','belief becomes opinion'],
-      fl:'Without what we see, what we believe is just an opinion.' },
-    { lg:['everything above is dying','without what we believe, the mission is a list of things to do'],
-      sm:['dying above here','mission becomes a list'],
-      fl:'Without what we believe, the mission is a list of things to do with no reason behind it.' },
-    { lg:['everything above is dying','without the mission, the values rule nothing out'],
-      sm:['dying above here','values rule nothing out'],
-      fl:'Without the mission, the values rule nothing out and the voice has nothing to be about.' }
+    { belowLg:['below the cut, nothing is fed','nothing draws on the lens'],
+      belowSm:['nothing fed below','lens goes unused'],
+      belowFl:'The roots are starving. Nothing draws on the lens, and a finding nobody builds on stays in a drawer.',
+      aboveLg:['now the crown goes too','belief becomes opinion'],
+      aboveSm:['crown goes too','belief becomes opinion'],
+      aboveFl:'The crown goes with them. Without what we see, what we believe is just an opinion.' },
+    { belowLg:['below the cut, nothing is fed','nothing acts on the belief'],
+      belowSm:['nothing fed below','belief unacted on'],
+      belowFl:'The roots are starving. Nothing acts on the belief, and it stays a thing we say.',
+      aboveLg:['now the crown goes too','mission becomes a list'],
+      aboveSm:['crown goes too','mission becomes a list'],
+      aboveFl:'The crown goes with them. Without what we believe, the mission is a list of things to do with no reason behind it.' },
+    { belowLg:['below the cut, nothing is fed','nobody carries the mission out'],
+      belowSm:['nothing fed below','nobody carries it out'],
+      belowFl:'The roots are starving. Nobody carries the mission out, and it becomes a sentence on a wall.',
+      aboveLg:['now the crown goes too','values rule nothing out'],
+      aboveSm:['crown goes too','values rule nothing out'],
+      aboveFl:'The crown goes with them. Without the mission, the values rule nothing out and the voice has nothing to be about.' }
   ];
+  // 0 = cut just made, nothing visible. 1 = below starving. 2 = crown gone.
+  var cutPhase = 0, phaseT1 = null, phaseT2 = null;
+  var PHASE1_MS = 1200, PHASE2_MS = 4200;
   var zones = { z1:null, z2:null, z3:null, z4:null };
   var perches = [];   // where the bird can land: live limbs only
 
@@ -1184,11 +1212,11 @@
       var hint = el('text',{x:cx-hw-48, y:c.y+4, class:'lab', 'text-anchor':'end'},g);
       hint.textContent = 'cut here';
       c.hint = hint;
-      // each cut says what specifically stops working, which is the point of the handle
-      var noteLines = NARROW0 ? CUTNOTES[i].sm : CUTNOTES[i].lg;
-      var note = labelLines(svg, cx+hw+18, c.y+2, 'start', noteLines, true);
-      note.setAttribute('class','lab dying-note');
-      note.setAttribute('id','note-'+i);
+      // each cut carries both of its notes, and shows whichever stage is running
+      var nB = labelLines(svg, cx+hw+18, c.y+2, 'start', NARROW0 ? CUTNOTES[i].belowSm : CUTNOTES[i].belowLg, true);
+      nB.setAttribute('class','lab dying-note'); nB.setAttribute('id','note-b-'+i);
+      var nA = labelLines(svg, cx+hw+18, c.y+2, 'start', NARROW0 ? CUTNOTES[i].aboveSm : CUTNOTES[i].aboveLg, true);
+      nA.setAttribute('class','lab dying-note'); nA.setAttribute('id','note-a-'+i);
       g.addEventListener('click', function(){ toggleCut(i); });
       g.addEventListener('keydown', function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); toggleCut(i);} });
     });
@@ -1198,7 +1226,10 @@
 
   /* ---- cut state ---- */
   var beats = Array.prototype.slice.call(document.querySelectorAll('.beat'));
+  // Water keeps climbing past a fresh cut, because the wood carrying it is untouched.
+  // The sap line stops at the cut only once the roots have failed.
   function activeCutFrac(){
+    if (cutPhase < 2) return 1;
     for (var i=0;i<CUTS.length;i++){ if (CUTS[i].on) return sapFrac(CUTS[i].y); }
     return 1;
   }
@@ -1206,8 +1237,19 @@
     for (var i=0;i<CUTS.length;i++){ if (CUTS[i].on) return i; }
     return -1;
   }
+  function clearPhases(){
+    if (phaseT1) clearTimeout(phaseT1);
+    if (phaseT2) clearTimeout(phaseT2);
+    phaseT1 = phaseT2 = null;
+  }
   function toggleCut(i){
     CUTS[i].on = !CUTS[i].on;
+    clearPhases();
+    cutPhase = 0;
+    if (firstCutIndex() >= 0){
+      phaseT1 = setTimeout(function(){ cutPhase = 1; renderCuts(); }, PHASE1_MS);
+      phaseT2 = setTimeout(function(){ cutPhase = 2; renderCuts(); }, PHASE2_MS);
+    }
     renderCuts();
   }
   function renderCuts(){
@@ -1215,20 +1257,32 @@
     CUTS.forEach(function(c,i){
       var g = document.getElementById('cut-'+i);
       var scar = document.getElementById('scar-'+i);
-      var note = document.getElementById('note-'+i);
+      var noteB = document.getElementById('note-b-'+i);
+      var noteA = document.getElementById('note-a-'+i);
       g.classList.toggle('on', c.on);
       if (c.hint) c.hint.textContent = c.on ? 'undo' : 'cut here';
       scar.classList.toggle('on', c.on);
-      note.classList.toggle('on', c.on && i===first);
+      noteB.classList.toggle('on', c.on && i===first && cutPhase===1);
+      noteA.classList.toggle('on', c.on && i===first && cutPhase>=2);
     });
-    // zones above the first cut die: cut 0 kills z2,z3,z4; cut 1 kills z3,z4; cut 2 kills z4
-    var kill = { 1:false, 2:false, 3:false, 4:false };
-    if (first >= 0){ for (var z=first+2; z<=4; z++) kill[z] = true; }
-    [1,2,3,4].forEach(function(z2){
-      document.getElementById('zone-'+z2).classList.toggle('dying', kill[z2]);
+    // Below the cut starves first: cut 0 starves z1; cut 1 starves z1,z2; cut 2 starves z1,z2,z3.
+    // The crown above it holds, then goes later, all at once.
+    var starve = { 1:false, 2:false, 3:false, 4:false };
+    var kill   = { 1:false, 2:false, 3:false, 4:false };
+    if (first >= 0){
+      if (cutPhase >= 1){ for (var z=1; z<=first+1; z++) starve[z] = true; }
+      if (cutPhase >= 2){ for (var z2=first+2; z2<=4; z2++) kill[z2] = true; }
+    }
+    [1,2,3,4].forEach(function(zi){
+      var zg = document.getElementById('zone-'+zi);
+      zg.classList.toggle('starving', starve[zi] && !kill[zi]);
+      zg.classList.toggle('dying', kill[zi]);
     });
+    var rootsG = document.getElementById('roots');
+    if (rootsG) rootsG.classList.toggle('starving', first >= 0 && cutPhase >= 1);
     beats.forEach(function(b){
       var bz = +b.dataset.zone;
+      b.classList.toggle('starve', bz>=1 && bz<=4 && starve[bz] && !kill[bz]);
       b.classList.toggle('dim', bz>=1 && bz<=4 && kill[bz]);
     });
     var flag = document.getElementById('cut-flag');
@@ -1237,10 +1291,17 @@
       if (first >= 0){
         document.getElementById('cut-flag-head').textContent =
           NARROW0 ? 'You cut a ring here.' : 'You cut a ring around the trunk.';
-        document.getElementById('cut-flag-sub').textContent = NARROW0
-          ? 'Nothing above it gets water. ' +
-            CUTNOTES[first].sm[1].replace(/^./, function(c){ return c.toUpperCase(); }) + '.'
-          : 'Nothing above it gets water. ' + CUTNOTES[first].fl;
+        var n = CUTNOTES[first], sub;
+        if (cutPhase === 0){
+          sub = 'Nothing looks wrong yet. Water is still climbing past it.';
+        } else if (cutPhase === 1){
+          sub = NARROW0 ? 'The roots are starving. ' +
+            n.belowSm[1].replace(/^./, function(c){ return c.toUpperCase(); }) + '.' : n.belowFl;
+        } else {
+          sub = NARROW0 ? 'The crown goes with them. ' +
+            n.aboveSm[1].replace(/^./, function(c){ return c.toUpperCase(); }) + '.' : n.aboveFl;
+        }
+        document.getElementById('cut-flag-sub').textContent = sub;
       }
     }
     applyScroll(); // refresh sap cap
@@ -1266,7 +1327,7 @@
     btn.addEventListener('click', function(ev){ ev.preventDefault(); toggleWhy(btn); });
   });
 
-  function healAll(){ CUTS.forEach(function(c){ c.on=false; }); renderCuts(); }
+  function healAll(){ CUTS.forEach(function(c){ c.on=false; }); clearPhases(); cutPhase = 0; renderCuts(); }
   document.getElementById('heal').addEventListener('click', healAll);
   document.getElementById('cut-flag-heal').addEventListener('click', healAll);
 
@@ -1373,8 +1434,9 @@
   /* ================================================= */
   /* the bird                                          */
   /* It lands on whatever living limb is nearest the   */
-  /* reader, so it climbs as you climb. Cut the trunk  */
-  /* and it will not perch above the cut.              */
+  /* reader, so it climbs as you climb. A fresh cut    */
+  /* does not move it: the crown is still drinking. It */
+  /* goes only when the roots fail.                    */
   /* ================================================= */
   (function birdLife(){
     if (!perches.length) return;
@@ -1394,16 +1456,17 @@
 
     var cur = { x:perches[0].x, y:perches[0].y }, curPerch = perches[0];
     var from = null, to = null, flying = false, tf = 0, dur = 0, face = 1, flap = 0, lastTs = 0;
+    var gone = 0;
 
+    // null means there is nothing left alive to land on
     function livingPerches(){
-      var first = firstCutIndex();
-      if (first < 0) return perches;
-      var cy = CUTS[first].y, out = [];
-      for (var i=0;i<perches.length;i++){ if (perches[i].y > cy) out.push(perches[i]); }
-      return out.length ? out : [perches[0]];   // perches[0] is the lowest, always below every cut
+      if (firstCutIndex() < 0) return perches;
+      if (cutPhase < 2) return perches;   // water still reaching the crown, so nothing has changed for a bird
+      return null;
     }
     function targetPerch(){
       var list = livingPerches();
+      if (!list) return curPerch;
       var wy = (vh*0.42 - curTY)/scaleW;      // a little above centre, so it leads the reader
       var best = list[0], bd = Infinity;
       for (var i=0;i<list.length;i++){
@@ -1419,8 +1482,12 @@
       var r = climb.getBoundingClientRect();
       if (r.bottom < 0 || r.top > vh){ requestAnimationFrame(frame); return; }
 
+      var alive = livingPerches() !== null;
+      gone += ((alive ? 0 : 1) - gone) * Math.min(1, dt/460);
+      g.setAttribute('opacity', Math.max(0, 1-gone).toFixed(3));
+
       var tp = targetPerch();
-      if (!flying && tp !== curPerch){
+      if (alive && !flying && tp !== curPerch){
         from = { x:cur.x, y:cur.y };
         to = tp;
         var dx = to.x - from.x, dy = to.y - from.y;
